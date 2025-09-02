@@ -1,89 +1,89 @@
 {% extends "core/base.html" %}
 {% load core_tags %}
-{% block title %}Facilities{% endblock %}
+{% block title %}Equipment{% endblock %}
 {% block content %}
   <!-- Page Header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="mb-0" style="color: var(--primary-blue);"><i class="fas fa-building me-3"></i>Facilities</h1>
-    <a href="{% url 'facility_create' %}" class="btn btn-blue">
-      <i class="fas fa-plus me-2"></i>Add New Facility
+    <h1 class="mb-0" style="color: var(--primary-blue);"><i class="fas fa-tools me-3"></i>Equipment</h1>
+    <a href="{% url 'equipment_create' %}" class="btn btn-blue">
+      <i class="fas fa-plus me-2"></i>Add New Equipment
     </a>
   </div>
 
   <!-- Search and Filter Section -->
   {% include 'core/includes/search_filter.html' %}
 
-  <!-- Facilities Table -->
-  {% if facilities %}
+  <!-- Equipment Table -->
+  {% if equipment_list %}
     <div class="card border-0 shadow-sm">
       <div class="card-body p-0">
         <div class="table-responsive">
           <table class="table table-hover mb-0">
             <thead style="background: linear-gradient(135deg, var(--primary-blue), var(--light-blue)); color: white;">
               <tr>
-                {% table_header 'facility_id' 'Facility ID' current_sort %}
-                {% table_header 'name' 'Facility Name' current_sort %}
-                {% table_header 'location' 'Location' current_sort %}
-                {% table_header 'facility_type' 'Type' current_sort %}
-                {% table_header 'partner_organization' 'Partner Organization' current_sort %}
+                {% table_header 'equipment_id' 'Equipment ID' current_sort %}
+                {% table_header 'name' 'Equipment Name' current_sort %}
+                {% table_header 'facility__name' 'Facility' current_sort %}
+                {% table_header 'usage_domain' 'Usage Domain' current_sort %}
+                {% table_header 'support_phase' 'Support Phase' current_sort %}
                 <th scope="col" class="text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {% for facility in facilities %}
+              {% for equipment in equipment_list %}
                 <tr class="hover-row">
                   <td class="fw-medium" style="color: var(--primary-blue);">
-                    {{ facility.facility_id|default:"—" }}
+                    {{ equipment.equipment_id|default:"—" }}
                   </td>
                   <td>
                     <div class="d-flex align-items-center">
-                      <i class="fas fa-building me-2" style="color: var(--primary-blue);"></i>
+                      <i class="fas fa-tools me-2" style="color: var(--primary-blue);"></i>
                       <div>
-                        <div class="fw-medium">{{ facility.name|truncatechars:40 }}</div>
-                        {% if facility.description %}
-                          <small class="text-muted">{{ facility.description|truncatechars:60 }}</small>
+                        <div class="fw-medium">{{ equipment.name|truncatechars:40 }}</div>
+                        {% if equipment.description %}
+                          <small class="text-muted">{{ equipment.description|truncatechars:60 }}</small>
                         {% endif %}
                       </div>
                     </div>
                   </td>
                   <td>
-                    {% if facility.location %}
-                      <span class="text-muted">
-                        <i class="fas fa-map-marker-alt me-1"></i>{{ facility.location }}
+                    {% if equipment.facility %}
+                      <span class="badge bg-light text-dark border">
+                        <i class="fas fa-building me-1"></i>{{ equipment.facility.name }}
                       </span>
                     {% else %}
                       <span class="text-muted">—</span>
                     {% endif %}
                   </td>
                   <td>
-                    {% if facility.facility_type %}
-                      <span class="badge bg-info">{{ facility.facility_type }}</span>
+                    {% if equipment.usage_domain %}
+                      <span class="badge bg-primary">{{ equipment.usage_domain }}</span>
                     {% else %}
                       <span class="text-muted">—</span>
                     {% endif %}
                   </td>
                   <td>
-                    {% if facility.partner_organization %}
-                      <span class="badge bg-secondary">{{ facility.partner_organization }}</span>
+                    {% if equipment.support_phase %}
+                      <span class="badge bg-success">{{ equipment.support_phase }}</span>
                     {% else %}
                       <span class="text-muted">—</span>
                     {% endif %}
                   </td>
                   <td class="text-center">
                     <div class="btn-group btn-group-sm" role="group">
-                      <a href="{% url 'facility_detail' facility.pk %}" 
+                      <a href="{% url 'equipment_detail' equipment.pk %}" 
                          class="btn btn-outline-primary" 
                          title="View Details">
                         <i class="fas fa-eye"></i>
                       </a>
-                      <a href="{% url 'facility_update' facility.pk %}" 
+                      <a href="{% url 'equipment_update' equipment.pk %}" 
                          class="btn btn-outline-warning" 
-                         title="Edit Facility">
+                         title="Edit Equipment">
                         <i class="fas fa-edit"></i>
                       </a>
-                      <a href="{% url 'facility_delete' facility.pk %}" 
+                      <a href="{% url 'equipment_delete' equipment.pk %}" 
                          class="btn btn-outline-danger" 
-                         title="Delete Facility">
+                         title="Delete Equipment">
                         <i class="fas fa-trash"></i>
                       </a>
                     </div>
@@ -101,18 +101,18 @@
 
   {% else %}
     <div class="text-center py-5">
-      <i class="fas fa-building fa-5x text-muted mb-4"></i>
-      <h3 class="text-muted mb-3">No Facilities Found</h3>
+      <i class="fas fa-tools fa-5x text-muted mb-4"></i>
+      <h3 class="text-muted mb-3">No Equipment Found</h3>
       {% if query %}
-        <p class="text-muted mb-4">No facilities match your search criteria. Try adjusting your filters or search terms.</p>
-        <a href="{% url 'facility_list' %}" class="btn btn-secondary me-2">
+        <p class="text-muted mb-4">No equipment matches your search criteria. Try adjusting your filters or search terms.</p>
+        <a href="{% url 'equipment_list' %}" class="btn btn-secondary me-2">
           <i class="fas fa-times me-1"></i>Clear Filters
         </a>
       {% else %}
-        <p class="text-muted mb-4">Start by adding your first facility.</p>
+        <p class="text-muted mb-4">Start by adding your first equipment.</p>
       {% endif %}
-      <a href="{% url 'facility_create' %}" class="btn btn-blue">
-        <i class="fas fa-plus me-2"></i>Add Facility
+      <a href="{% url 'equipment_create' %}" class="btn btn-blue">
+        <i class="fas fa-plus me-2"></i>Add Equipment
       </a>
     </div>
   {% endif %}

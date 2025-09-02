@@ -1,7 +1,7 @@
 {% extends "core/base.html" %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
-  <div class="hero-section text-center">
+  <div class="hero-section text-center py-5 mb-5" style="background: linear-gradient(135deg, var(--primary-blue), var(--light-blue)); color: white; border-radius: 15px;">
     <div class="container">
       <h1 class="display-3 fw-bold mb-3"><i class="fas fa-rocket me-3"></i>Capstone Dashboard</h1>
       <!-- <p class="lead fs-4 mb-4">Manage your programs efficiently with our comprehensive platform</p> -->
@@ -16,43 +16,71 @@
 
   <div class="row g-4">
     <div class="col-lg-4 col-md-6">
-      <div class="card h-100">
-        <div class="card-body text-center">
+      <div class="card h-100 border-0 shadow-sm hover-card">
+        <div class="card-body text-center p-4">
           <div class="mb-3">
-            <i class="fas fa-list-ul fa-3x text-primary"></i>
+            <i class="fas fa-list-ul fa-3x" style="color: var(--primary-blue);"></i>
           </div>
-          <h5 class="card-title">Programs</h5>
-          <p class="card-text">View and manage all your programs in one centralized location.</p>
-          <a href="{% url 'program_list' %}" class="btn btn-primary">
+          <h5 class="card-title" style="color: var(--primary-blue);">Programs</h5>
+          <p class="card-text text-muted">View and manage all your programs in one centralized location.</p>
+          <a href="{% url 'program_list' %}" class="btn btn-blue">
             <i class="fas fa-arrow-right me-2"></i>View Programs
           </a>
         </div>
       </div>
     </div>
     <div class="col-lg-4 col-md-6">
-      <div class="card h-100">
-        <div class="card-body text-center">
+      <div class="card h-100 border-0 shadow-sm hover-card">
+        <div class="card-body text-center p-4">
           <div class="mb-3">
-            <i class="fas fa-building fa-3x text-success"></i>
+            <i class="fas fa-building fa-3x" style="color: var(--primary-blue);"></i>
           </div>
-          <h5 class="card-title">Facilities</h5>
-          <p class="card-text">View and manage all your facilities.</p>
-          <a href="{% url 'facility_list' %}" class="btn btn-success">
+          <h5 class="card-title" style="color: var(--primary-blue);">Facilities</h5>
+          <p class="card-text text-muted">View and manage all your facilities.</p>
+          <a href="{% url 'facility_list' %}" class="btn btn-blue">
             <i class="fas fa-arrow-right me-2"></i>Facilities
           </a>
         </div>
       </div>
     </div>
     <div class="col-lg-4 col-md-6">
-      <div class="card h-100">
-        <div class="card-body text-center">
+      <div class="card h-100 border-0 shadow-sm hover-card">
+        <div class="card-body text-center p-4">
           <div class="mb-3">
-            <i class="fas fa-cog fa-3x text-secondary"></i>
+            <i class="fas fa-cog fa-3x" style="color: var(--primary-blue);"></i>
           </div>
-          <h5 class="card-title">Admin Panel</h5>
-          <p class="card-text">Access advanced administrative features and settings.</p>
-          <a href="{% url 'admin:index' %}" class="btn btn-secondary">
-            <i class="fas fa-cog me-2"></i>Admin Panel
+          <h5 class="card-title" style="color: var(--primary-blue);">Equipment</h5>
+          <p class="card-text text-muted">Manage all equipment and resources.</p>
+          <a href="{% url 'equipment_list' %}" class="btn btn-blue">
+            <i class="fas fa-arrow-right me-2"></i>Equipment
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-6">
+      <div class="card h-100 border-0 shadow-sm hover-card">
+        <div class="card-body text-center p-4">
+          <div class="mb-3">
+            <i class="fas fa-folder-open fa-3x" style="color: var(--primary-blue);"></i>
+          </div>
+          <h5 class="card-title" style="color: var(--primary-blue);">Projects</h5>
+          <p class="card-text text-muted">View and manage all projects.</p>
+          <a href="{% url 'project_list' %}" class="btn btn-blue">
+            <i class="fas fa-arrow-right me-2"></i>Projects
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4 col-md-6">
+      <div class="card h-100 border-0 shadow-sm hover-card">
+        <div class="card-body text-center p-4">
+          <div class="mb-3">
+            <i class="fas fa-handshake fa-3x" style="color: var(--primary-blue);"></i>
+          </div>
+          <h5 class="card-title" style="color: var(--primary-blue);">Services</h5>
+          <p class="card-text text-muted">Manage services and offerings.</p>
+          <a href="{% url 'service_list' %}" class="btn btn-blue">
+            <i class="fas fa-arrow-right me-2"></i>Services
           </a>
         </div>
       </div>
@@ -61,29 +89,29 @@
 
   <div class="row mt-5">
     <div class="col-12">
-      <div class="card bg-light">
-        <div class="card-body text-center">
-          <h4 class="card-title mb-3">Quick Stats</h4>
+      <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, #f8f9ff, white);">
+        <div class="card-body text-center p-5">
+          <h4 class="card-title mb-4" style="color: var(--primary-blue);">Quick Stats</h4>
           <div class="row">
             <div class="col-md-4">
               <div class="mb-3">
-                <i class="fas fa-project-diagram fa-2x text-info mb-2"></i>
-                <h3 class="text-info">{{ programs|length|default:0 }}</h3>
-                <p class="mb-0">Total Programs</p>
+                <i class="fas fa-project-diagram fa-2x mb-2" style="color: var(--primary-blue);"></i>
+                <h3 style="color: var(--primary-blue);">{{ programs|length|default:0 }}</h3>
+                <p class="mb-0 text-muted">Total Programs</p>
               </div>
             </div>
             <div class="col-md-4">
               <div class="mb-3">
-                <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
-                <h3 class="text-success">100%</h3>
-                <p class="mb-0">Completion Rate</p>
+                <i class="fas fa-check-circle fa-2x mb-2" style="color: var(--primary-blue);"></i>
+                <h3 style="color: var(--primary-blue);">100%</h3>
+                <p class="mb-0 text-muted">Completion Rate</p>
               </div>
             </div>
             <div class="col-md-4">
               <div class="mb-3">
-                <i class="fas fa-users fa-2x text-warning mb-2"></i>
-                <h3 class="text-warning">1</h3>
-                <p class="mb-0">Active Users</p>
+                <i class="fas fa-users fa-2x mb-2" style="color: var(--primary-blue);"></i>
+                <h3 style="color: var(--primary-blue);">1</h3>
+                <p class="mb-0 text-muted">Active Users</p>
               </div>
             </div>
           </div>

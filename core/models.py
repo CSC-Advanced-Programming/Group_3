@@ -94,15 +94,15 @@ class Facility(models.Model):
 
 class Project(models.Model):
     project_id = models.CharField(max_length=10, unique=True, blank=True, null=True)
-    program = models.ForeignKey('Program', on_delete=models.PROTECT, related_name='projects')
-    facility = models.ForeignKey('Facility', on_delete=models.PROTECT, related_name='projects')
-    title = models.CharField(max_length=200)
+    program = models.ForeignKey('Program', on_delete=models.PROTECT, related_name='projects', null=True, blank=True)
+    facility = models.ForeignKey('Facility', on_delete=models.PROTECT, related_name='projects', null=True, blank=True)
+    title = models.CharField(max_length=200, default='New Project')
     nature_of_project = models.CharField(max_length=100, choices=(
         ('Research', 'Research'),
         ('Prototype', 'Prototype'),
         ('Applied', 'Applied'),
-    ))
-    description = models.TextField()
+    ), default='Research')
+    description = models.TextField(default='Project description')
     innovation_focus = models.CharField(max_length=255, blank=True, null=True)
     prototype_stage = models.CharField(max_length=100, choices=(
         ('Concept', 'Concept'),
@@ -133,7 +133,7 @@ class Project(models.Model):
 
 class Equipment(models.Model):
     equipment_id = models.CharField(max_length=10, unique=True, blank=True, null=True)
-    facility = models.ForeignKey('Facility', on_delete=models.PROTECT, related_name='equipment')
+    facility = models.ForeignKey('Facility', on_delete=models.PROTECT, related_name='equipment', null=True, blank=True)
     name = models.CharField(max_length=200)
     capabilities = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
@@ -170,7 +170,7 @@ class Equipment(models.Model):
 
 class Service(models.Model):
     service_id = models.CharField(max_length=10, unique=True, blank=True, null=True)
-    facility = models.ForeignKey('Facility', on_delete=models.PROTECT, related_name='services')
+    facility = models.ForeignKey('Facility', on_delete=models.PROTECT, related_name='services', null=True, blank=True)
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True, null=True)
     category = models.CharField(max_length=100, choices=(
@@ -203,19 +203,19 @@ class Service(models.Model):
         return self.name
 class Participant(models.Model):
     participant_id = models.CharField(max_length=10, unique=True, blank=True, null=True)
-    full_name = models.CharField(max_length=200)
-    email = models.EmailField(unique=True)
+    full_name = models.CharField(max_length=200, default='Unknown Participant')
+    email = models.EmailField(unique=True, default='unknown@example.com')
     affiliation = models.CharField(max_length=100, choices=(
         ('CS', 'CS'),
         ('SE', 'SE'),
         ('Engineering', 'Engineering'),
         ('Other', 'Other'),
-    ))
+    ), default='Other')
     specialization = models.CharField(max_length=100, choices=(
         ('Software', 'Software'),
         ('Hardware', 'Hardware'),
         ('Business', 'Business'),
-    ))
+    ), default='Software')
     cross_skill_trained = models.BooleanField(default=False)
     institution = models.CharField(max_length=100, choices=(
         ('SCIT', 'SCIT'),
@@ -223,7 +223,7 @@ class Participant(models.Model):
         ('UniPod', 'UniPod'),
         ('UIRI', 'UIRI'),
         ('Lwera', 'Lwera'),
-    ))
+    ), default='SCIT')
 
     def save(self, *args, **kwargs):
         if not self.participant_id:
@@ -249,13 +249,13 @@ class ProjectParticipant(models.Model):
         ('Student', 'Student'),
         ('Lecturer', 'Lecturer'),
         ('Contributor', 'Contributor'),
-    ))
+    ), default='Student')
     skill_role = models.CharField(max_length=100, choices=(
         ('Developer', 'Developer'),
         ('Engineer', 'Engineer'),
         ('Designer', 'Designer'),
         ('Business Lead', 'Business Lead'),
-    ))
+    ), default='Developer')
 
     class Meta:
         unique_together = ('project', 'participant')
@@ -264,9 +264,9 @@ class ProjectParticipant(models.Model):
         return f"{self.participant.full_name} on {self.project.title} as {self.role_on_project}"
 class Outcome(models.Model):
     outcome_id = models.CharField(max_length=10, unique=True, blank=True, null=True)
-    project = models.ForeignKey('Project', on_delete=models.CASCADE, related_name='outcomes')
-    title = models.CharField(max_length=200)
-    description = models.TextField()
+    project = models.ForeignKey('Project', on_delete=models.CASCADE, related_name='outcomes', null=True, blank=True)
+    title = models.CharField(max_length=200, default='New Outcome')
+    description = models.TextField(default='Outcome description')
     artifact_link = models.URLField(blank=True, null=True)
     outcome_type = models.CharField(max_length=100, choices=(
         ('CAD', 'CAD'),
@@ -274,7 +274,7 @@ class Outcome(models.Model):
         ('Prototype', 'Prototype'),
         ('Report', 'Report'),
         ('Business Plan', 'Business Plan'),
-    ))
+    ), default='Report')
     quality_certification = models.CharField(max_length=255, blank=True, null=True)
     commercialization_status = models.CharField(max_length=100, choices=(
         ('Demoed', 'Demoed'),

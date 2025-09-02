@@ -1,87 +1,103 @@
 {% extends "core/base.html" %}
 {% load core_tags %}
-{% block title %}Programs{% endblock %}
+{% block title %}Projects{% endblock %}
 {% block content %}
   <!-- Page Header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="mb-0" style="color: var(--primary-blue);"><i class="fas fa-list-ul me-3"></i>Programs</h1>
-    <a href="{% url 'program_create' %}" class="btn btn-blue">
-      <i class="fas fa-plus me-2"></i>Add New Program
+    <h1 class="mb-0" style="color: var(--primary-blue);"><i class="fas fa-folder-open me-3"></i>Projects</h1>
+    <a href="{% url 'project_create' %}" class="btn btn-blue">
+      <i class="fas fa-plus me-2"></i>Add New Project
     </a>
   </div>
 
   <!-- Search and Filter Section -->
   {% include 'core/includes/search_filter.html' %}
 
-  <!-- Programs Table -->
-  {% if programs %}
+  <!-- Projects Table -->
+  {% if projects %}
     <div class="card border-0 shadow-sm">
       <div class="card-body p-0">
         <div class="table-responsive">
           <table class="table table-hover mb-0">
             <thead style="background: linear-gradient(135deg, var(--primary-blue), var(--light-blue)); color: white;">
               <tr>
-                {% table_header 'program_id' 'Program ID' current_sort %}
-                {% table_header 'name' 'Program Name' current_sort %}
-                {% table_header 'national_alignment' 'National Alignment' current_sort %}
-                {% table_header 'focus_areas' 'Focus Areas' current_sort %}
-                {% table_header 'phases' 'Phases' current_sort %}
+                {% table_header 'project_id' 'ID' current_sort %}
+                {% table_header 'title' 'Project Title' current_sort %}
+                {% table_header 'program__name' 'Program' current_sort %}
+                {% table_header 'facility__name' 'Facility' current_sort %}
+                {% table_header 'nature_of_project' 'Nature' current_sort %}
+                {% table_header 'innovation_focus' 'Innovation Focus' current_sort %}
+                {% table_header 'prototype_stage' 'Prototype Stage' current_sort %}
                 <th scope="col" class="text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {% for program in programs %}
+              {% for project in projects %}
                 <tr class="hover-row">
                   <td class="fw-medium" style="color: var(--primary-blue);">
-                    {{ program.program_id|default:"—" }}
+                    {{ project.project_id|default:"—" }}
                   </td>
                   <td>
                     <div class="d-flex align-items-center">
-                      <i class="fas fa-project-diagram me-2" style="color: var(--primary-blue);"></i>
+                      <i class="fas fa-folder-open me-2" style="color: var(--primary-blue);"></i>
                       <div>
-                        <div class="fw-medium">{{ program.name|truncatechars:40 }}</div>
-                        {% if program.description %}
-                          <small class="text-muted">{{ program.description|truncatechars:60 }}</small>
+                        <div class="fw-medium">{{ project.title|truncatechars:40 }}</div>
+                        {% if project.description %}
+                          <small class="text-muted">{{ project.description|truncatechars:60 }}</small>
                         {% endif %}
                       </div>
                     </div>
                   </td>
                   <td>
-                    {% if program.national_alignment %}
+                    {% if project.program %}
+                      <span class="badge bg-light text-dark border">{{ project.program.name }}</span>
+                    {% else %}
+                      <span class="text-muted">—</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if project.facility %}
+                      <span class="badge bg-light text-dark border">{{ project.facility.name }}</span>
+                    {% else %}
+                      <span class="text-muted">—</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if project.nature_of_project %}
                       <span class="badge" style="background-color: var(--light-blue); color: white;">
-                        {{ program.national_alignment|format_choice_field }}
+                        {{ project.nature_of_project|format_choice_field }}
                       </span>
                     {% else %}
                       <span class="text-muted">—</span>
                     {% endif %}
                   </td>
                   <td>
-                    {% if program.focus_areas %}
-                      <span class="badge bg-info text-white">{{ program.focus_areas|format_choice_field }}</span>
+                    {% if project.innovation_focus %}
+                      <span class="badge bg-info text-white">{{ project.innovation_focus|format_choice_field }}</span>
                     {% else %}
                       <span class="text-muted">—</span>
                     {% endif %}
                   </td>
                   <td>
-                    {% if program.phases %}
-                      <span class="badge bg-warning text-dark">{{ program.phases|format_choice_field }}</span>
+                    {% if project.prototype_stage %}
+                      <span class="badge bg-warning text-dark">{{ project.prototype_stage|format_choice_field }}</span>
                     {% else %}
                       <span class="text-muted">—</span>
                     {% endif %}
                   </td>
                   <td class="text-center">
                     <div class="btn-group btn-group-sm" role="group">
-                      <a href="{% url 'program_detail' program.pk %}" 
+                      <a href="{% url 'project_detail' project.pk %}" 
                          class="btn btn-outline-primary btn-sm" 
                          title="View Details">
                         <i class="fas fa-eye"></i>
                       </a>
-                      <a href="{% url 'program_update' program.pk %}" 
+                      <a href="{% url 'project_update' project.pk %}" 
                          class="btn btn-outline-secondary btn-sm" 
                          title="Edit">
                         <i class="fas fa-edit"></i>
                       </a>
-                      <a href="{% url 'program_delete' program.pk %}" 
+                      <a href="{% url 'project_delete' project.pk %}" 
                          class="btn btn-outline-danger btn-sm" 
                          title="Delete">
                         <i class="fas fa-trash"></i>
@@ -104,18 +120,18 @@
     <div class="text-center py-5">
       <div class="card border-0 shadow-sm">
         <div class="card-body p-5">
-          <i class="fas fa-list-ul fa-4x text-muted mb-3"></i>
-          <h3 class="text-muted">No programs found</h3>
+          <i class="fas fa-folder-open fa-4x text-muted mb-3"></i>
+          <h3 class="text-muted">No projects found</h3>
           {% if search_query %}
-            <p class="text-muted mb-4">No programs match your search for "{{ search_query }}".</p>
+            <p class="text-muted mb-4">No projects match your search for "{{ search_query }}".</p>
             <a href="?" class="btn btn-outline-secondary me-2">
               <i class="fas fa-times me-1"></i>Clear Search
             </a>
           {% else %}
-            <p class="text-muted mb-4">Get started by creating your first program.</p>
+            <p class="text-muted mb-4">Get started by creating your first project.</p>
           {% endif %}
-          <a href="{% url 'program_create' %}" class="btn btn-blue">
-            <i class="fas fa-plus me-2"></i>Create Your First Program
+          <a href="{% url 'project_create' %}" class="btn btn-blue">
+            <i class="fas fa-plus me-2"></i>Create Your First Project
           </a>
         </div>
       </div>

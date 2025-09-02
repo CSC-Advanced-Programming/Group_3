@@ -1,0 +1,110 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ projectparticipant.participant.full_name }} - {{ projectparticipant.project.title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2><i class="fas fa-user-tag me-2"></i>Project Participation</h2>
+  <div>
+    <a href="{% url 'projectparticipant_update' projectparticipant.pk %}" class="btn btn-warning">
+      <i class="fas fa-edit me-1"></i>Edit
+    </a>
+    <a href="{% url 'projectparticipant_delete' projectparticipant.pk %}" class="btn btn-danger">
+      <i class="fas fa-trash me-1"></i>Remove
+    </a>
+    <a href="{% url 'projectparticipant_list' %}" class="btn btn-secondary">
+      <i class="fas fa-arrow-left me-1"></i>Back to List
+    </a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5><i class="fas fa-user me-2"></i>Participant Information</h5>
+      </div>
+      <div class="card-body">
+        <table class="table table-borderless">
+          <tr>
+            <th style="width: 40%;">Name:</th>
+            <td><a href="{% url 'participant_detail' projectparticipant.participant.pk %}">{{ projectparticipant.participant.full_name }}</a></td>
+          </tr>
+          <tr>
+            <th>Email:</th>
+            <td><a href="mailto:{{ projectparticipant.participant.email }}">{{ projectparticipant.participant.email }}</a></td>
+          </tr>
+          <tr>
+            <th>Affiliation:</th>
+            <td>{{ projectparticipant.participant.affiliation }}</td>
+          </tr>
+          <tr>
+            <th>Specialization:</th>
+            <td>{{ projectparticipant.participant.specialization }}</td>
+          </tr>
+          <tr>
+            <th>Institution:</th>
+            <td>{{ projectparticipant.participant.institution }}</td>
+          </tr>
+          <tr>
+            <th>Cross-Skill Trained:</th>
+            <td>
+              {% if projectparticipant.participant.cross_skill_trained %}
+                <span class="badge bg-success">Yes</span>
+              {% else %}
+                <span class="badge bg-secondary">No</span>
+              {% endif %}
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-header">
+        <h5><i class="fas fa-project-diagram me-2"></i>Project Information</h5>
+      </div>
+      <div class="card-body">
+        <table class="table table-borderless">
+          <tr>
+            <th style="width: 40%;">Project:</th>
+            <td><a href="{% url 'project_detail' projectparticipant.project.pk %}">{{ projectparticipant.project.title }}</a></td>
+          </tr>
+          <tr>
+            <th>Program:</th>
+            <td>{{ projectparticipant.project.program.name }}</td>
+          </tr>
+          <tr>
+            <th>Facility:</th>
+            <td>{{ projectparticipant.project.facility.name }}</td>
+          </tr>
+          <tr>
+            <th>Nature:</th>
+            <td>{{ projectparticipant.project.nature_of_project }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="card mt-4">
+      <div class="card-header">
+        <h5><i class="fas fa-tasks me-2"></i>Role Information</h5>
+      </div>
+      <div class="card-body">
+        <table class="table table-borderless">
+          <tr>
+            <th style="width: 40%;">Role on Project:</th>
+            <td><span class="badge bg-primary">{{ projectparticipant.role_on_project }}</span></td>
+          </tr>
+          <tr>
+            <th>Skill Role:</th>
+            <td><span class="badge bg-info">{{ projectparticipant.skill_role }}</span></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

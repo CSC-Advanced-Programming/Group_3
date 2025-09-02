@@ -1,89 +1,89 @@
 {% extends "core/base.html" %}
 {% load core_tags %}
-{% block title %}Facilities{% endblock %}
+{% block title %}Services{% endblock %}
 {% block content %}
   <!-- Page Header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="mb-0" style="color: var(--primary-blue);"><i class="fas fa-building me-3"></i>Facilities</h1>
-    <a href="{% url 'facility_create' %}" class="btn btn-blue">
-      <i class="fas fa-plus me-2"></i>Add New Facility
+    <h1 class="mb-0" style="color: var(--primary-blue);"><i class="fas fa-concierge-bell me-3"></i>Services</h1>
+    <a href="{% url 'service_create' %}" class="btn btn-blue">
+      <i class="fas fa-plus me-2"></i>Add New Service
     </a>
   </div>
 
   <!-- Search and Filter Section -->
   {% include 'core/includes/search_filter.html' %}
 
-  <!-- Facilities Table -->
-  {% if facilities %}
+  <!-- Services Table -->
+  {% if services %}
     <div class="card border-0 shadow-sm">
       <div class="card-body p-0">
         <div class="table-responsive">
           <table class="table table-hover mb-0">
             <thead style="background: linear-gradient(135deg, var(--primary-blue), var(--light-blue)); color: white;">
               <tr>
-                {% table_header 'facility_id' 'Facility ID' current_sort %}
-                {% table_header 'name' 'Facility Name' current_sort %}
-                {% table_header 'location' 'Location' current_sort %}
-                {% table_header 'facility_type' 'Type' current_sort %}
-                {% table_header 'partner_organization' 'Partner Organization' current_sort %}
+                {% table_header 'service_id' 'Service ID' current_sort %}
+                {% table_header 'name' 'Service Name' current_sort %}
+                {% table_header 'facility__name' 'Facility' current_sort %}
+                {% table_header 'category' 'Category' current_sort %}
+                {% table_header 'skill_type' 'Skill Type' current_sort %}
                 <th scope="col" class="text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {% for facility in facilities %}
+              {% for service in services %}
                 <tr class="hover-row">
                   <td class="fw-medium" style="color: var(--primary-blue);">
-                    {{ facility.facility_id|default:"—" }}
+                    {{ service.service_id|default:"—" }}
                   </td>
                   <td>
                     <div class="d-flex align-items-center">
-                      <i class="fas fa-building me-2" style="color: var(--primary-blue);"></i>
+                      <i class="fas fa-concierge-bell me-2" style="color: var(--primary-blue);"></i>
                       <div>
-                        <div class="fw-medium">{{ facility.name|truncatechars:40 }}</div>
-                        {% if facility.description %}
-                          <small class="text-muted">{{ facility.description|truncatechars:60 }}</small>
+                        <div class="fw-medium">{{ service.name|truncatechars:40 }}</div>
+                        {% if service.description %}
+                          <small class="text-muted">{{ service.description|truncatechars:60 }}</small>
                         {% endif %}
                       </div>
                     </div>
                   </td>
                   <td>
-                    {% if facility.location %}
-                      <span class="text-muted">
-                        <i class="fas fa-map-marker-alt me-1"></i>{{ facility.location }}
+                    {% if service.facility %}
+                      <span class="badge bg-light text-dark border">
+                        <i class="fas fa-building me-1"></i>{{ service.facility.name }}
                       </span>
                     {% else %}
                       <span class="text-muted">—</span>
                     {% endif %}
                   </td>
                   <td>
-                    {% if facility.facility_type %}
-                      <span class="badge bg-info">{{ facility.facility_type }}</span>
+                    {% if service.category %}
+                      <span class="badge bg-info">{{ service.category }}</span>
                     {% else %}
                       <span class="text-muted">—</span>
                     {% endif %}
                   </td>
                   <td>
-                    {% if facility.partner_organization %}
-                      <span class="badge bg-secondary">{{ facility.partner_organization }}</span>
+                    {% if service.skill_type %}
+                      <span class="badge bg-secondary">{{ service.skill_type }}</span>
                     {% else %}
                       <span class="text-muted">—</span>
                     {% endif %}
                   </td>
                   <td class="text-center">
                     <div class="btn-group btn-group-sm" role="group">
-                      <a href="{% url 'facility_detail' facility.pk %}" 
+                      <a href="{% url 'service_detail' service.pk %}" 
                          class="btn btn-outline-primary" 
                          title="View Details">
                         <i class="fas fa-eye"></i>
                       </a>
-                      <a href="{% url 'facility_update' facility.pk %}" 
+                      <a href="{% url 'service_update' service.pk %}" 
                          class="btn btn-outline-warning" 
-                         title="Edit Facility">
+                         title="Edit Service">
                         <i class="fas fa-edit"></i>
                       </a>
-                      <a href="{% url 'facility_delete' facility.pk %}" 
+                      <a href="{% url 'service_delete' service.pk %}" 
                          class="btn btn-outline-danger" 
-                         title="Delete Facility">
+                         title="Delete Service">
                         <i class="fas fa-trash"></i>
                       </a>
                     </div>
@@ -101,18 +101,18 @@
 
   {% else %}
     <div class="text-center py-5">
-      <i class="fas fa-building fa-5x text-muted mb-4"></i>
-      <h3 class="text-muted mb-3">No Facilities Found</h3>
+      <i class="fas fa-concierge-bell fa-5x text-muted mb-4"></i>
+      <h3 class="text-muted mb-3">No Services Found</h3>
       {% if query %}
-        <p class="text-muted mb-4">No facilities match your search criteria. Try adjusting your filters or search terms.</p>
-        <a href="{% url 'facility_list' %}" class="btn btn-secondary me-2">
+        <p class="text-muted mb-4">No services match your search criteria. Try adjusting your filters or search terms.</p>
+        <a href="{% url 'service_list' %}" class="btn btn-secondary me-2">
           <i class="fas fa-times me-1"></i>Clear Filters
         </a>
       {% else %}
-        <p class="text-muted mb-4">Start by adding your first facility.</p>
+        <p class="text-muted mb-4">Start by adding your first service.</p>
       {% endif %}
-      <a href="{% url 'facility_create' %}" class="btn btn-blue">
-        <i class="fas fa-plus me-2"></i>Add Facility
+      <a href="{% url 'service_create' %}" class="btn btn-blue">
+        <i class="fas fa-plus me-2"></i>Add Service
       </a>
     </div>
   {% endif %}

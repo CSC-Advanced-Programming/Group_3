@@ -1,0 +1,9 @@
+{% load core_tags %}
+<th scope="col" class="sortable-header">
+    <a href="?{% url_replace request 'sort' next_sort %}" 
+       class="text-decoration-none d-flex justify-content-between align-items-center text-white"
+       style="color: inherit !important;">
+        {{ display_name }}
+        <i class="{{ icon }} ms-1"></i>
+    </a>
+</th>
