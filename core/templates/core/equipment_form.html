@@ -30,6 +30,10 @@
               {% if form.facility.errors %}
                 <div class="text-danger">{{ form.facility.errors }}</div>
               {% endif %}
+              <div class="form-text">
+                <i class="fas fa-info-circle me-1"></i>
+                Equipment will be associated with this facility and available for projects at this location.
+              </div>
             </div>
           </div>
 
@@ -57,6 +61,9 @@
               {% if form.usage_domain.errors %}
                 <div class="text-danger">{{ form.usage_domain.errors }}</div>
               {% endif %}
+              <div class="form-text">
+                <small>Electronics, Mechanical, or IoT - helps match equipment to project needs.</small>
+              </div>
             </div>
             <div class="col-md-6 mb-3">
               <label for="{{ form.support_phase.id_for_label }}" class="form-label">Support Phase</label>
@@ -64,6 +71,9 @@
               {% if form.support_phase.errors %}
                 <div class="text-danger">{{ form.support_phase.errors }}</div>
               {% endif %}
+              <div class="form-text">
+                <small>Which project phase this equipment supports (Training, Prototyping, Testing, Commercialization).</small>
+              </div>
             </div>
           </div>
 

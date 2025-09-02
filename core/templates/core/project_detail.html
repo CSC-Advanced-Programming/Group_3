@@ -92,8 +92,11 @@
 
   <div class="col-md-4">
     <div class="card">
-      <div class="card-header">
+      <div class="card-header d-flex justify-content-between align-items-center">
         <h5><i class="fas fa-users me-2"></i>Participants</h5>
+        <a href="{% url 'project_participant_create' project.pk %}" class="btn btn-sm btn-primary">
+          <i class="fas fa-plus me-1"></i>Add Participant
+        </a>
       </div>
       <div class="card-body">
         {% if project.project_participants.all %}
@@ -112,8 +115,11 @@
     </div>
 
     <div class="card mt-4">
-      <div class="card-header">
+      <div class="card-header d-flex justify-content-between align-items-center">
         <h5><i class="fas fa-clipboard-check me-2"></i>Outcomes</h5>
+        <a href="{% url 'outcome_create' %}?project={{ project.pk }}" class="btn btn-sm btn-primary">
+          <i class="fas fa-plus me-1"></i>Add Outcome
+        </a>
       </div>
       <div class="card-body">
         {% if project.outcomes.all %}

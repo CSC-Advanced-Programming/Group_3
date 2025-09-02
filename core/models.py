@@ -46,6 +46,8 @@ class Program(models.Model):
             self.program_id = f'Pg-{new_number:03d}'
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name
 
 PARTNER_ORGANIZATION_CHOICES = (
     ('UniPod', 'UniPod'),

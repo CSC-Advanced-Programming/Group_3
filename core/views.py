@@ -122,7 +122,7 @@ class EquipmentListView(SearchFilterMixin, ListView):
     
     def get_queryset(self):
         """Apply search and filters to the queryset."""
-        queryset = Equipment.objects.select_related('facility').all()
+        queryset = Equipment.objects.select_related('facility').prefetch_related('facility__projects').all()
         
         # Apply search
         search_query = self.get_search_query()
@@ -155,6 +155,12 @@ class EquipmentDetailView(DetailView):
     model = Equipment
     template_name = "core/equipment_detail.html"
     context_object_name = "equipment"
+    
+    def get_queryset(self):
+        return Equipment.objects.select_related('facility').prefetch_related(
+            'facility__projects__program',
+            'facility__equipment'
+        )
 
 class EquipmentCreateView(CreateView):
     model = Equipment
@@ -411,6 +417,18 @@ class ProjectParticipantUpdateView(UpdateView):
     fields = ["project", "participant", "role_on_project", "skill_role"]
     template_name = "core/projectparticipant_form.html"
     success_url = reverse_lazy("projectparticipant_list")
+    
+class ProjectParticipantForProjectCreateView(CreateView):
+    model = ProjectParticipant
+    fields = ["participant", "role_on_project", "skill_role"]
+    template_name = "core/project_participant_form.html"
+    
+    def get_success_url(self):
+        return reverse_lazy('project_detail', kwargs={'pk': self.kwargs['project_id']})
+    
+    def form_valid(self, form):
+        form.instance.project_id = self.kwargs['project_id']
+        return super().form_valid(form)
 
 class ProjectParticipantDeleteView(DeleteView):
     model = ProjectParticipant
@@ -485,6 +503,25 @@ class OutcomeCreateView(CreateView):
     fields = ["project", "title", "description", "artifact_link", "outcome_type", "quality_certification", "commercialization_status"]
     template_name = "core/outcome_form.html"
     success_url = reverse_lazy("outcome_list")
+    
+    def get_initial(self):
+        initial = super().get_initial()
+        if 'project' in self.request.GET:
+            project_id = self.request.GET.get('project')
+            try:
+                initial['project'] = Project.objects.get(pk=project_id)
+            except Project.DoesNotExist:
+                pass
+        return initial
+    
+    def get_success_url(self):
+        if 'project' in self.request.GET:
+            try:
+                project_id = self.request.GET.get('project')
+                return reverse_lazy('project_detail', kwargs={'pk': project_id})
+            except:
+                pass
+        return self.success_url
 
 class OutcomeUpdateView(UpdateView):
     model = Outcome
@@ -561,6 +598,16 @@ class ProgramDetailView(DetailView):
     model = Program
     template_name = "core/program_detail.html"
     context_object_name = "program"
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        program = self.object
+        
+        # Get associated projects (direct 1-to-many relationship per ERD)
+        projects = program.projects.all()
+        context['projects'] = projects
+        
+        return context
 
 class ProgramCreateView(CreateView):
     model = Program
