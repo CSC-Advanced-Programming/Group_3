@@ -24,6 +24,15 @@
               {% endif %}
             </div>
 
+            {% if form.instance.pk %}
+            <div class="mb-3">
+              <label for="id_program_id" class="form-label">
+                <i class="fas fa-id-badge me-1"></i>Program ID
+              </label>
+              <input type="text" class="form-control" id="id_program_id" value="{{ form.instance.program_id }}" readonly>
+            </div>
+            {% endif %}
+
             <div class="mb-3">
               <label for="{{ form.description.id_for_label }}" class="form-label">
                 <i class="fas fa-align-left me-1"></i>Description
@@ -38,7 +47,12 @@
               <label for="{{ form.national_alignment.id_for_label }}" class="form-label">
                 <i class="fas fa-map-marker-alt me-1"></i>National Alignment
               </label>
-              <input type="text" name="{{ form.national_alignment.name }}" value="{{ form.national_alignment.value|default:'' }}" class="form-control" id="{{ form.national_alignment.id_for_label }}" placeholder="National alignment information">
+              <select name="{{ form.national_alignment.name }}" class="form-control" id="{{ form.national_alignment.id_for_label }}">
+                <option value="">Select national alignment</option>
+                {% for choice in form.national_alignment.field.choices %}
+                  <option value="{{ choice.0 }}" {% if choice.0 == form.national_alignment.value %}selected{% endif %}>{{ choice.1 }}</option>
+                {% endfor %}
+              </select>
               {% if form.national_alignment.errors %}
                 <div class="text-danger small">{{ form.national_alignment.errors.0 }}</div>
               {% endif %}
@@ -49,7 +63,12 @@
               <label for="{{ form.focus_areas.id_for_label }}" class="form-label">
                 <i class="fas fa-bullseye me-1"></i>Focus Areas
               </label>
-              <textarea name="{{ form.focus_areas.name }}" class="form-control" id="{{ form.focus_areas.id_for_label }}" rows="2" placeholder="Comma-separated list of focus areas">{{ form.focus_areas.value|default:'' }}</textarea>
+              <select name="{{ form.focus_areas.name }}" class="form-control" id="{{ form.focus_areas.id_for_label }}">
+                <option value="">Select focus area</option>
+                {% for choice in form.focus_areas.field.choices %}
+                  <option value="{{ choice.0 }}" {% if choice.0 == form.focus_areas.value %}selected{% endif %}>{{ choice.1 }}</option>
+                {% endfor %}
+              </select>
               {% if form.focus_areas.errors %}
                 <div class="text-danger small">{{ form.focus_areas.errors.0 }}</div>
               {% endif %}
@@ -60,7 +79,12 @@
               <label for="{{ form.phases.id_for_label }}" class="form-label">
                 <i class="fas fa-tasks me-1"></i>Phases
               </label>
-              <textarea name="{{ form.phases.name }}" class="form-control" id="{{ form.phases.id_for_label }}" rows="2" placeholder="Comma-separated list of phases">{{ form.phases.value|default:'' }}</textarea>
+              <select name="{{ form.phases.name }}" class="form-control" id="{{ form.phases.id_for_label }}">
+                <option value="">Select phase</option>
+                {% for choice in form.phases.field.choices %}
+                  <option value="{{ choice.0 }}" {% if choice.0 == form.phases.value %}selected{% endif %}>{{ choice.1 }}</option>
+                {% endfor %}
+              </select>
               {% if form.phases.errors %}
                 <div class="text-danger small">{{ form.phases.errors.0 }}</div>
               {% endif %}

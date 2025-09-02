@@ -1,0 +1,114 @@
+{% extends "core/base.html" %}
+{% block title %}{% if form.instance.pk %}Edit Facility{% else %}Create Facility{% endif %}{% endblock %}
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h1 class="h4 mb-0">
+            <i class="fas fa-{{ view.object|default:'plus'|lower }} me-2"></i>
+            {% if form.instance.pk %}Edit Facility{% else %}Create New Facility{% endif %}
+          </h1>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label for="{{ form.name.id_for_label }}" class="form-label">
+                <i class="fas fa-tag me-1"></i>Facility Name
+              </label>
+              <input type="text" name="{{ form.name.name }}" value="{{ form.name.value|default:'' }}" class="form-control" id="{{ form.name.id_for_label }}" placeholder="Enter facility name" maxlength="200" required>
+              {% if form.name.errors %}
+                <div class="text-danger small">{{ form.name.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            {% if form.instance.pk %}
+            <div class="mb-3">
+              <label for="id_facility_id" class="form-label">
+                <i class="fas fa-id-badge me-1"></i>Facility ID
+              </label>
+              <input type="text" class="form-control" id="id_facility_id" value="{{ form.instance.facility_id }}" readonly>
+            </div>
+            {% endif %}
+
+            <div class="mb-3">
+              <label for="{{ form.location.id_for_label }}" class="form-label">
+                <i class="fas fa-map-marker-alt me-1"></i>Location
+              </label>
+              <input type="text" name="{{ form.location.name }}" value="{{ form.location.value|default:'' }}" class="form-control" id="{{ form.location.id_for_label }}" placeholder="Enter facility location" maxlength="200" required>
+              {% if form.location.errors %}
+                <div class="text-danger small">{{ form.location.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.description.id_for_label }}" class="form-label">
+                <i class="fas fa-align-left me-1"></i>Description
+              </label>
+              <textarea name="{{ form.description.name }}" class="form-control" id="{{ form.description.id_for_label }}" rows="3" placeholder="Describe the facility">{{ form.description.value|default:'' }}</textarea>
+              {% if form.description.errors %}
+                <div class="text-danger small">{{ form.description.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.partner_organization.id_for_label }}" class="form-label">
+                <i class="fas fa-handshake me-1"></i>Partner Organization
+              </label>
+              <select name="{{ form.partner_organization.name }}" class="form-control" id="{{ form.partner_organization.id_for_label }}">
+                <option value="">Select a partner organization</option>
+                {% for choice in form.partner_organization.field.choices %}
+                  <option value="{{ choice.0 }}" {% if choice.0 == form.partner_organization.value %}selected{% endif %}>{{ choice.1 }}</option>
+                {% endfor %}
+              </select>
+              {% if form.partner_organization.errors %}
+                <div class="text-danger small">{{ form.partner_organization.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.facility_type.id_for_label }}" class="form-label">
+                <i class="fas fa-tag me-1"></i>Facility Type
+              </label>
+              <select name="{{ form.facility_type.name }}" class="form-control" id="{{ form.facility_type.id_for_label }}" required>
+                <option value="">Select a facility type</option>
+                {% for choice in form.facility_type.field.choices %}
+                  <option value="{{ choice.0 }}" {% if choice.0 == form.facility_type.value %}selected{% endif %}>{{ choice.1 }}</option>
+                {% endfor %}
+              </select>
+              {% if form.facility_type.errors %}
+                <div class="text-danger small">{{ form.facility_type.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="mb-4">
+              <label for="{{ form.capabilities.id_for_label }}" class="form-label">
+                <i class="fas fa-cogs me-1"></i>Capabilities
+              </label>
+              <select name="{{ form.capabilities.name }}" class="form-control" id="{{ form.capabilities.id_for_label }}">
+                <option value="">Select capabilities</option>
+                {% for choice in form.capabilities.field.choices %}
+                  <option value="{{ choice.0 }}" {% if choice.0 == form.capabilities.value %}selected{% endif %}>{{ choice.1 }}</option>
+                {% endfor %}
+              </select>
+              {% if form.capabilities.errors %}
+                <div class="text-danger small">{{ form.capabilities.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-success">
+                <i class="fas fa-save me-1"></i>Save Facility
+              </button>
+              <a href="{% url 'facility_list' %}" class="btn btn-secondary">
+                <i class="fas fa-times me-1"></i>Cancel
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
