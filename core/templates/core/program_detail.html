@@ -85,9 +85,44 @@
           </div>
         </div>
         <div class="card-footer">
-          <a href="{% url 'program_list' %}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-1"></i>Back to Programs
-          </a>
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <a href="{% url 'program_list' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left me-1"></i>Back to Programs
+              </a>
+            </div>
+            <div>
+              <a href="{% url 'project_create' %}?program={{ program.pk }}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i>Create Project in this Program
+              </a>
+              <a href="{% url 'project_list' %}?program={{ program.pk }}" class="btn btn-outline-primary">
+                View Projects in this Program
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4">
+        <div class="card">
+          <div class="card-header">
+            <h5><i class="fas fa-project-diagram me-2"></i>Projects under this Program</h5>
+          </div>
+          <div class="card-body">
+            {% with program.projects.all as projlist %}
+              {% if projlist %}
+                <ul class="list-group">
+                  {% for proj in projlist %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      <a href="{% url 'project_detail' proj.pk %}">{{ proj.title }}</a>
+                      <span class="badge bg-secondary">{{ proj.nature_of_project }}</span>
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <p class="text-muted mb-0">No projects yet.</p>
+              {% endif %}
+            {% endwith %}
+          </div>
         </div>
       </div>
     </div>

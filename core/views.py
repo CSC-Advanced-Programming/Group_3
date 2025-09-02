@@ -1,4 +1,4 @@
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.db.models import Q
 from .models import Program, Facility, Project, Equipment, Service, Participant, ProjectParticipant, Outcome
@@ -84,6 +84,16 @@ class ProjectCreateView(CreateView):
     template_name = "core/project_form.html"
     success_url = reverse_lazy("project_list")
 
+    def get_initial(self):
+        initial = super().get_initial()
+        program_pk = self.request.GET.get('program')
+        facility_pk = self.request.GET.get('facility')
+        if program_pk:
+            initial['program'] = program_pk
+        if facility_pk:
+            initial['facility'] = facility_pk
+        return initial
+
 class ProjectUpdateView(UpdateView):
     model = Project
     fields = ["program", "facility", "title", "nature_of_project", "description", "innovation_focus", "prototype_stage", "testing_requirements", "commercialization_plan"]
@@ -162,6 +172,13 @@ class EquipmentCreateView(CreateView):
     template_name = "core/equipment_form.html"
     success_url = reverse_lazy("equipment_list")
 
+    def get_initial(self):
+        initial = super().get_initial()
+        facility_pk = self.request.GET.get('facility')
+        if facility_pk:
+            initial['facility'] = facility_pk
+        return initial
+
 class EquipmentUpdateView(UpdateView):
     model = Equipment
     fields = ["facility", "name", "capabilities", "description", "inventory_code", "usage_domain", "support_phase"]
@@ -239,6 +256,13 @@ class ServiceCreateView(CreateView):
     fields = ["facility", "name", "description", "category", "skill_type"]
     template_name = "core/service_form.html"
     success_url = reverse_lazy("service_list")
+
+    def get_initial(self):
+        initial = super().get_initial()
+        facility_pk = self.request.GET.get('facility')
+        if facility_pk:
+            initial['facility'] = facility_pk
+        return initial
 
 class ServiceUpdateView(UpdateView):
     model = Service
@@ -404,7 +428,23 @@ class ProjectParticipantCreateView(CreateView):
     model = ProjectParticipant
     fields = ["project", "participant", "role_on_project", "skill_role"]
     template_name = "core/projectparticipant_form.html"
-    success_url = reverse_lazy("projectparticipant_list")
+    
+    def get_initial(self):
+        initial = super().get_initial()
+        project_pk = self.request.GET.get('project')
+        participant_pk = self.request.GET.get('participant')
+        if project_pk:
+            initial['project'] = project_pk
+        if participant_pk:
+            initial['participant'] = participant_pk
+        return initial
+
+    def get_success_url(self):
+        # Redirect back to project detail if possible
+        project = self.object.project
+        if project:
+            return reverse('project_detail', args=[project.pk])
+        return reverse_lazy('projectparticipant_list')
 
 class ProjectParticipantUpdateView(UpdateView):
     model = ProjectParticipant
@@ -415,7 +455,11 @@ class ProjectParticipantUpdateView(UpdateView):
 class ProjectParticipantDeleteView(DeleteView):
     model = ProjectParticipant
     template_name = "core/projectparticipant_confirm_delete.html"
-    success_url = reverse_lazy("projectparticipant_list")
+    def get_success_url(self):
+        project = self.object.project
+        if project:
+            return reverse('project_detail', args=[project.pk])
+        return reverse_lazy('projectparticipant_list')
 
 # Outcome Views
 class OutcomeListView(SearchFilterMixin, ListView):
@@ -480,17 +524,44 @@ class OutcomeDetailView(DetailView):
     template_name = "core/outcome_detail.html"
     context_object_name = "outcome"
 
+from django import forms
+
+
+class OutcomeForm(forms.ModelForm):
+    class Meta:
+        model = Outcome
+        fields = ["project", "title", "description", "artifact_link", "artifact_file", "outcome_type", "quality_certification", "commercialization_status"]
+
+
 class OutcomeCreateView(CreateView):
     model = Outcome
-    fields = ["project", "title", "description", "artifact_link", "outcome_type", "quality_certification", "commercialization_status"]
+    form_class = OutcomeForm
     template_name = "core/outcome_form.html"
-    success_url = reverse_lazy("outcome_list")
+
+    def get_initial(self):
+        initial = super().get_initial()
+        project_pk = self.request.GET.get('project')
+        if project_pk:
+            initial['project'] = project_pk
+        return initial
+
+    def get_success_url(self):
+        # If created from a project page, redirect to that project's detail
+        project = self.object.project
+        if project:
+            return reverse('project_detail', args=[project.pk])
+        return reverse_lazy("outcome_list")
 
 class OutcomeUpdateView(UpdateView):
     model = Outcome
-    fields = ["project", "title", "description", "artifact_link", "outcome_type", "quality_certification", "commercialization_status"]
+    form_class = OutcomeForm
     template_name = "core/outcome_form.html"
-    success_url = reverse_lazy("outcome_list")
+
+    def get_success_url(self):
+        project = self.object.project
+        if project:
+            return reverse('project_detail', args=[project.pk])
+        return reverse_lazy("outcome_list")
 
 class OutcomeDeleteView(DeleteView):
     model = Outcome

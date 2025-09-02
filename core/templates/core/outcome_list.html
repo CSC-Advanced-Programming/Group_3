@@ -21,6 +21,9 @@
               <small class="text-muted">ID: {{ outcome.outcome_id }}</small><br>
               <strong>Project:</strong> <a href="{% url 'project_detail' outcome.project.pk %}">{{ outcome.project.title }}</a><br>
               <strong>Type:</strong> {{ outcome.outcome_type }}<br>
+                {% if outcome.artifact_file %}
+                  <small class="text-muted">File attached</small><br>
+                {% endif %}
               {% if outcome.commercialization_status %}
                 <strong>Status:</strong> {{ outcome.commercialization_status }}<br>
               {% endif %}
