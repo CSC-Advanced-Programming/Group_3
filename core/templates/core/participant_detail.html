@@ -82,6 +82,11 @@
         {% else %}
           <p class="text-muted">Not participating in any projects yet.</p>
         {% endif %}
+        <div class="mt-2">
+          <a href="{% url 'projectparticipant_create' %}?participant={{ participant.pk }}" class="btn btn-sm btn-primary">
+            <i class="fas fa-plus me-1"></i>Assign to a Project
+          </a>
+        </div>
       </div>
     </div>
   </div>

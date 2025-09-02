@@ -46,6 +46,9 @@ class Program(models.Model):
             self.program_id = f'Pg-{new_number:03d}'
         super().save(*args, **kwargs)
 
+    def __str__(self):
+        return self.name
+
 
 PARTNER_ORGANIZATION_CHOICES = (
     ('UniPod', 'UniPod'),
@@ -268,6 +271,7 @@ class Outcome(models.Model):
     title = models.CharField(max_length=200, default='New Outcome')
     description = models.TextField(default='Outcome description')
     artifact_link = models.URLField(blank=True, null=True)
+    artifact_file = models.FileField(upload_to='outcomes/', blank=True, null=True)
     outcome_type = models.CharField(max_length=100, choices=(
         ('CAD', 'CAD'),
         ('PCB', 'PCB'),

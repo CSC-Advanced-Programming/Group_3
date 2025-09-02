@@ -42,7 +42,14 @@
             <th>Outcome Type:</th>
             <td><span class="badge bg-primary">{{ outcome.outcome_type }}</span></td>
           </tr>
-          {% if outcome.artifact_link %}
+          {% if outcome.artifact_file %}
+          <tr>
+            <th>Artifact File:</th>
+            <td><a href="{{ outcome.artifact_file.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+              <i class="fas fa-download me-1"></i>Download File
+            </a></td>
+          </tr>
+          {% elif outcome.artifact_link %}
           <tr>
             <th>Artifact Link:</th>
             <td><a href="{{ outcome.artifact_link }}" target="_blank" class="btn btn-sm btn-outline-primary">
