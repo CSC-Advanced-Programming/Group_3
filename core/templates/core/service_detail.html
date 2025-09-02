@@ -1,0 +1,76 @@
+{% extends "core/base.html" %}
+{% block title %}{{ service.name }} - Service Details{% endblock %}
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                    <h1 class="h4 mb-0">
+                        <i class="fas fa-tools me-2"></i>{{ service.name }}
+                    </h1>
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'service_update' service.pk %}" class="btn btn-sm btn-outline-light" title="Edit">
+                            <i class="fas fa-edit me-1"></i>Edit
+                        </a>
+                        <a href="{% url 'service_delete' service.pk %}" class="btn btn-sm btn-outline-danger" title="Delete">
+                            <i class="fas fa-trash me-1"></i>Delete
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            {% if service.description %}
+                                <div class="mb-4">
+                                    <h5 class="text-info mb-2">
+                                        <i class="fas fa-align-left me-2"></i>Description
+                                    </h5>
+                                    <p class="lead">{{ service.description }}</p>
+                                </div>
+                            {% endif %}
+
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-1">
+                                    <i class="fas fa-building me-2"></i>Facility
+                                </h6>
+                                <p class="mb-0">{{ service.facility.name }}</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-1">
+                                    <i class="fas fa-tag me-2"></i>Category
+                                </h6>
+                                <p class="mb-0">{{ service.category }}</p>
+                            </div>
+
+                            <div class="mb-3">
+                                <h6 class="text-muted mb-1">
+                                    <i class="fas fa-cogs me-2"></i>Skill Type
+                                </h6>
+                                <p class="mb-0">{{ service.skill_type }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6 class="text-secondary mb-2"><i class="fas fa-info-circle me-1"></i>Quick Info</h6>
+                                    <ul class="list-unstyled mb-0">
+                                        <li><strong>ID:</strong> {{ service.service_id }}</li>
+                                        <li><strong>Facility:</strong> {{ service.facility.name }}</li>
+                                        <li><strong>Category:</strong> {{ service.category }}</li>
+                                        <li><strong>Skill Type:</strong> {{ service.skill_type }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <a href="{% url 'service_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-1"></i>Back to Service List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
