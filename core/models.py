@@ -97,12 +97,17 @@ class Project(models.Model):
     program = models.ForeignKey('Program', on_delete=models.PROTECT, related_name='projects')
     facility = models.ForeignKey('Facility', on_delete=models.PROTECT, related_name='projects')
     title = models.CharField(max_length=200)
-    nature_of_project = models.CharField(max_length=100, choices=(
-        ('Research', 'Research'),
-        ('Prototype', 'Prototype'),
-        ('Applied', 'Applied'),
-    ))
-    description = models.TextField()
+    nature_of_project = models.CharField(
+        max_length=100,
+        choices=(
+            ('Research', 'Research'),
+            ('Prototype', 'Prototype'),
+            ('Applied', 'Applied'),
+        ),
+        blank=True,
+        null=True
+    )
+    description = models.TextField(blank=True, null=True)
     innovation_focus = models.CharField(max_length=255, blank=True, null=True)
     prototype_stage = models.CharField(max_length=100, choices=(
         ('Concept', 'Concept'),

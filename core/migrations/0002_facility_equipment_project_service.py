@@ -35,8 +35,15 @@ class Migration(migrations.Migration):
             name='Project',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200)),
+                ('title', models.CharField(max_length=200)),
+                ('nature_of_project', models.CharField(max_length=100, blank=True, null=True)),
+                ('description', models.TextField(blank=True, null=True)),
+                ('innovation_focus', models.CharField(max_length=255, blank=True, null=True)),
+                ('prototype_stage', models.CharField(max_length=100, blank=True, null=True)),
+                ('testing_requirements', models.TextField(blank=True, null=True)),
+                ('commercialization_plan', models.TextField(blank=True, null=True)),
                 ('facility', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='projects', to='core.facility')),
+                ('program', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='projects', to='core.program')),
             ],
         ),
         migrations.CreateModel(
