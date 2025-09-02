@@ -7,17 +7,18 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
-      --primary-blue: #2563eb;
-      --light-blue: #3b82f6;
-      --dark-blue: #1d4ed8;
-      --blue-hover: #1e40af;
+      --primary-blue: #001f4d; /* Navy Blue */
+      --light-blue: #274690;   /* Lighter Navy */
+      --dark-blue: #001233;    /* Dark Navy */
+      --blue-hover: #003366;   /* Navy Hover */
+    }
     }
     
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #ffffff;
-      color: #333;
+      background-color: #f4f8fb;
+      color: #001233;
     }
     
     .sidebar {
@@ -27,9 +28,9 @@
       height: 100vh;
       width: 280px;
       background: linear-gradient(180deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
-      color: white;
+      color: #fff;
       overflow-y: auto;
-      box-shadow: 2px 0 10px rgba(37, 99, 235, 0.1);
+      box-shadow: 2px 0 10px rgba(0, 31, 77, 0.1);
       z-index: 1000;
     }
     
@@ -100,14 +101,14 @@
     .main-content {
       margin-left: 280px;
       min-height: 100vh;
-      background-color: #f8fafc;
+      background-color: #e6ecf5;
     }
     
     .content-header {
-      background: white;
+      background: #f4f8fb;
       padding: 1.5rem 2rem;
-      border-bottom: 1px solid #e2e8f0;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid #b3c6e0;
+      box-shadow: 0 1px 3px rgba(0, 31, 77, 0.07);
     }
     
     .content-body {
@@ -129,7 +130,7 @@
     
     .card-header {
       background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
-      color: white;
+      color: #fff;
       border-radius: 12px 12px 0 0 !important;
       padding: 1rem 1.5rem;
       border: none;
@@ -141,28 +142,33 @@
       border-radius: 8px;
       padding: 0.5rem 1.5rem;
       transition: all 0.3s ease;
+      color: #fff;
     }
     
     .btn-primary:hover {
       background: var(--blue-hover);
       transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+      box-shadow: 0 4px 12px rgba(0, 31, 77, 0.4);
     }
     
     .btn-outline-primary {
       color: var(--primary-blue);
       border-color: var(--primary-blue);
       border-radius: 6px;
+      background: #fff;
     }
     
     .btn-outline-primary:hover {
       background: var(--primary-blue);
       border-color: var(--primary-blue);
+      color: #fff;
     }
     
     .badge {
       border-radius: 6px;
       padding: 0.4rem 0.8rem;
+      background: var(--primary-blue);
+      color: #fff;
     }
     
     .bg-primary {
