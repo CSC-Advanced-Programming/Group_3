@@ -15,4 +15,11 @@ urlpatterns = [
     path('facilities/<int:pk>/', views.FacilityDetailView.as_view(), name='facility_detail'),
     path('facilities/<int:pk>/update/', views.FacilityUpdateView.as_view(), name='facility_update'),
     path('facilities/<int:pk>/delete/', views.FacilityDeleteView.as_view(), name='facility_delete'),
+    # Service URLs
+    path('services/', views.ServiceListView.as_view(), name='service_list'),
+    path('facilities/<str:facility_id>/services/', views.FacilityServiceListView.as_view(), name='facility_service_list'),
+    path('services/create/', views.ServiceCreateView.as_view(), name='service_create'),
+    path('services/<int:pk>/update/', views.ServiceUpdateView.as_view(), name='service_update'),
+    path('services/<int:pk>/delete/', views.ServiceDeleteView.as_view(), name='service_delete'),
+    path('services/<int:pk>/', views.ServiceDetailView.as_view(), name='service_detail'),
 ]
