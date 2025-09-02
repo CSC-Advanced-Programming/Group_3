@@ -1,0 +1,78 @@
+{% extends "core/base.html" %}
+{% block title %}Services{% endblock %}
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0"><i class="fas fa-tools me-3 text-primary"></i>Services</h1>
+        <a href="{% url 'service_create' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Add New Service
+        </a>
+    </div>
+
+    <form method="get" class="row g-2 mb-4">
+        <div class="col-auto">
+            <input type="text" class="form-control" name="category" placeholder="Search by Category" value="{{ request.GET.category }}">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-outline-secondary"><i class="fas fa-search"></i> Search</button>
+        </div>
+    </form>
+
+    {% if services %}
+        <div class="row g-4">
+            {% for service in services %}
+                <div class="col-lg-6 col-xl-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-tools me-2 text-primary"></i>{{ service.name }}
+                                </h5>
+                                <div class="btn-group" role="group">
+                                    <a href="{% url 'service_update' service.pk %}" class="btn btn-sm btn-outline-warning" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'service_delete' service.pk %}" class="btn btn-sm btn-outline-danger" title="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            {% if service.description %}
+                                <p class="card-text text-muted mb-2">{{ service.description|truncatechars:100 }}</p>
+                            {% endif %}
+
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-building me-1"></i>Facility: {{ service.facility.name }}
+                                </small>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="fas fa-tag me-1"></i>Category: {{ service.category }}
+                                </small>
+                            </div>
+                            <div class="mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-cogs me-1"></i>Skill Type: {{ service.skill_type }}
+                                </small>
+                            </div>
+
+                            <a href="{% url 'service_detail' service.pk %}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-eye me-1"></i>View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-tools fa-4x text-muted mb-3"></i>
+            <h3 class="text-muted">No services available</h3>
+            <p class="text-muted mb-4">Get started by creating your first service.</p>
+            <a href="{% url 'service_create' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-plus me-2"></i>Create Your First Service
+            </a>
+        </div>
+    {% endif %}
+{% endblock %}
