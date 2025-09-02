@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Delete Project{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card border-danger">
+      <div class="card-header bg-danger text-white">
+        <h4><i class="fas fa-exclamation-triangle me-2"></i>Delete Project</h4>
+      </div>
+      <div class="card-body">
+        <p>Are you sure you want to delete the project <strong>"{{ object.title }}"</strong>?</p>
+        <p class="text-muted">This action cannot be undone. All related data will be permanently removed.</p>
+        
+        <div class="alert alert-warning">
+          <strong>Project Details:</strong><br>
+          <strong>ID:</strong> {{ object.project_id }}<br>
+          <strong>Program:</strong> {{ object.program.name }}<br>
+          <strong>Facility:</strong> {{ object.facility.name }}<br>
+          <strong>Nature:</strong> {{ object.nature_of_project }}
+        </div>
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="d-flex justify-content-between">
+            <a href="{% url 'project_detail' object.pk %}" class="btn btn-secondary">
+              <i class="fas fa-arrow-left me-1"></i>Cancel
+            </a>
+            <button type="submit" class="btn btn-danger">
+              <i class="fas fa-trash me-1"></i>Yes, Delete
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

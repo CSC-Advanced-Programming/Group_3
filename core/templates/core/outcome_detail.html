@@ -1,0 +1,117 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ outcome.title }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2><i class="fas fa-clipboard-check me-2"></i>{{ outcome.title }}</h2>
+  <div>
+    <a href="{% url 'outcome_update' outcome.pk %}" class="btn btn-warning">
+      <i class="fas fa-edit me-1"></i>Edit
+    </a>
+    <a href="{% url 'outcome_delete' outcome.pk %}" class="btn btn-danger">
+      <i class="fas fa-trash me-1"></i>Delete
+    </a>
+    <a href="{% url 'outcome_list' %}" class="btn btn-secondary">
+      <i class="fas fa-arrow-left me-1"></i>Back to List
+    </a>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h5><i class="fas fa-info-circle me-2"></i>Outcome Details</h5>
+      </div>
+      <div class="card-body">
+        <table class="table table-borderless">
+          <tr>
+            <th style="width: 30%;">Outcome ID:</th>
+            <td>{{ outcome.outcome_id }}</td>
+          </tr>
+          <tr>
+            <th>Title:</th>
+            <td>{{ outcome.title }}</td>
+          </tr>
+          <tr>
+            <th>Project:</th>
+            <td><a href="{% url 'project_detail' outcome.project.pk %}">{{ outcome.project.title }}</a></td>
+          </tr>
+          <tr>
+            <th>Outcome Type:</th>
+            <td><span class="badge bg-primary">{{ outcome.outcome_type }}</span></td>
+          </tr>
+          {% if outcome.artifact_link %}
+          <tr>
+            <th>Artifact Link:</th>
+            <td><a href="{{ outcome.artifact_link }}" target="_blank" class="btn btn-sm btn-outline-primary">
+              <i class="fas fa-external-link-alt me-1"></i>View Artifact
+            </a></td>
+          </tr>
+          {% endif %}
+          {% if outcome.quality_certification %}
+          <tr>
+            <th>Quality Certification:</th>
+            <td>{{ outcome.quality_certification }}</td>
+          </tr>
+          {% endif %}
+          {% if outcome.commercialization_status %}
+          <tr>
+            <th>Commercialization Status:</th>
+            <td><span class="badge bg-success">{{ outcome.commercialization_status }}</span></td>
+          </tr>
+          {% endif %}
+        </table>
+      </div>
+    </div>
+
+    <div class="card mt-4">
+      <div class="card-header">
+        <h5><i class="fas fa-align-left me-2"></i>Description</h5>
+      </div>
+      <div class="card-body">
+        {{ outcome.description|linebreaks }}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        <h5><i class="fas fa-project-diagram me-2"></i>Project Information</h5>
+      </div>
+      <div class="card-body">
+        <h6><a href="{% url 'project_detail' outcome.project.pk %}">{{ outcome.project.title }}</a></h6>
+        <p><strong>Program:</strong> {{ outcome.project.program.name }}</p>
+        <p><strong>Facility:</strong> {{ outcome.project.facility.name }}</p>
+        <p><strong>Nature:</strong> {{ outcome.project.nature_of_project }}</p>
+        {% if outcome.project.prototype_stage %}
+          <p><strong>Stage:</strong> {{ outcome.project.prototype_stage }}</p>
+        {% endif %}
+        <a href="{% url 'project_detail' outcome.project.pk %}" class="btn btn-sm btn-outline-primary">
+          View Project Details
+        </a>
+      </div>
+    </div>
+
+    {% if outcome.project.outcomes.count > 1 %}
+    <div class="card mt-4">
+      <div class="card-header">
+        <h5><i class="fas fa-list me-2"></i>Other Project Outcomes</h5>
+      </div>
+      <div class="card-body">
+        {% for other_outcome in outcome.project.outcomes.all %}
+          {% if other_outcome.pk != outcome.pk %}
+            <div class="mb-2">
+              <a href="{% url 'outcome_detail' other_outcome.pk %}">{{ other_outcome.title }}</a><br>
+              <small class="text-muted">{{ other_outcome.outcome_type }}</small>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -6,79 +6,315 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    .navbar-brand {
-      font-weight: bold;
+    :root {
+      --primary-blue: #2563eb;
+      --light-blue: #3b82f6;
+      --dark-blue: #1d4ed8;
+      --blue-hover: #1e40af;
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #ffffff;
+      color: #333;
+    }
+    
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 280px;
+      background: linear-gradient(180deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+      color: white;
+      overflow-y: auto;
+      box-shadow: 2px 0 10px rgba(37, 99, 235, 0.1);
+      z-index: 1000;
+    }
+    
+    .sidebar-header {
+      padding: 2rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar-brand {
       font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
     }
+    
+    .sidebar-brand i {
+      margin-right: 0.5rem;
+      font-size: 1.8rem;
+    }
+    
+    .sidebar-nav {
+      padding: 1rem 0;
+    }
+    
+    .nav-section {
+      margin-bottom: 2rem;
+    }
+    
+    .nav-section-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.7);
+      padding: 0 1.5rem 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1.5rem;
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+    }
+    
+    .nav-link:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-left-color: white;
+    }
+    
+    .nav-link.active {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: white;
+      border-left-color: white;
+    }
+    
+    .nav-link i {
+      margin-right: 0.75rem;
+      width: 20px;
+      text-align: center;
+    }
+    
+    .main-content {
+      margin-left: 280px;
+      min-height: 100vh;
+      background-color: #f8fafc;
+    }
+    
+    .content-header {
+      background: white;
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .content-body {
+      padding: 2rem;
+    }
+    
     .card {
-      transition: transform 0.2s;
       border: none;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      background: white;
     }
+    
     .card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.15);
     }
-    .btn {
-      border-radius: 25px;
-      font-weight: 500;
-    }
-    .hero-section {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    
+    .card-header {
+      background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
       color: white;
-      padding: 4rem 0;
-      margin-bottom: 3rem;
+      border-radius: 12px 12px 0 0 !important;
+      padding: 1rem 1.5rem;
+      border: none;
     }
-    .footer {
-      background-color: #343a40;
+    
+    .btn-primary {
+      background: var(--primary-blue);
+      border: none;
+      border-radius: 8px;
+      padding: 0.5rem 1.5rem;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      background: var(--blue-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    }
+    
+    .btn-outline-primary {
+      color: var(--primary-blue);
+      border-color: var(--primary-blue);
+      border-radius: 6px;
+    }
+    
+    .btn-outline-primary:hover {
+      background: var(--primary-blue);
+      border-color: var(--primary-blue);
+    }
+    
+    .badge {
+      border-radius: 6px;
+      padding: 0.4rem 0.8rem;
+    }
+    
+    .bg-primary {
+      background: var(--primary-blue) !important;
+    }
+    
+    .text-primary {
+      color: var(--primary-blue) !important;
+    }
+    
+    .sidebar-toggle {
+      display: none;
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 1001;
+      background: var(--primary-blue);
       color: white;
-      padding: 2rem 0;
-      margin-top: 4rem;
+      border: none;
+      border-radius: 8px;
+      padding: 0.5rem;
+      width: 40px;
+      height: 40px;
+    }
+    
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+      
+      .sidebar.show {
+        transform: translateX(0);
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .sidebar-toggle {
+        display: block;
+      }
+      
+      .content-body {
+        padding: 1rem;
+      }
     }
   </style>
 </head>
-<body class="bg-light">
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
-    <div class="container">
-      <a class="navbar-brand" href="{% url 'home' %}">Capstone</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'home' %}"><i class="fas fa-home me-1"></i>Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'program_list' %}"><i class="fas fa-list me-1"></i>Programs</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'facility_list' %}"><i class="fas fa-building me-1"></i>Facilities</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'admin:index' %}"><i class="fas fa-cog me-1"></i>Admin</a>
-          </li>
-        </ul>
-      </div>
+<body>
+  <button class="sidebar-toggle" onclick="toggleSidebar()">
+    <i class="fas fa-bars"></i>
+  </button>
+  
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="{% url 'home' %}" class="sidebar-brand">
+        <i class="fas fa-graduation-cap"></i>
+        Capstone
+      </a>
     </div>
-  </nav>
-  <div class="container">
-    {% block content %}{% endblock %}
+    
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-title">Dashboard</div>
+        <a href="{% url 'home' %}" class="nav-link">
+          <i class="fas fa-home"></i>
+          Home
+        </a>
+      </div>
+      
+      <div class="nav-section">
+        <div class="nav-section-title">Core Management</div>
+        <a href="{% url 'program_list' %}" class="nav-link">
+          <i class="fas fa-list"></i>
+          Programs
+        </a>
+        <a href="{% url 'facility_list' %}" class="nav-link">
+          <i class="fas fa-building"></i>
+          Facilities
+        </a>
+        <a href="{% url 'project_list' %}" class="nav-link">
+          <i class="fas fa-project-diagram"></i>
+          Projects
+        </a>
+      </div>
+      
+      <div class="nav-section">
+        <div class="nav-section-title">Resources</div>
+        <a href="{% url 'equipment_list' %}" class="nav-link">
+          <i class="fas fa-tools"></i>
+          Equipment
+        </a>
+        <a href="{% url 'service_list' %}" class="nav-link">
+          <i class="fas fa-concierge-bell"></i>
+          Services
+        </a>
+      </div>
+      
+      <div class="nav-section">
+        <div class="nav-section-title">People & Outcomes</div>
+        <a href="{% url 'participant_list' %}" class="nav-link">
+          <i class="fas fa-users"></i>
+          Participants
+        </a>
+        <a href="{% url 'projectparticipant_list' %}" class="nav-link">
+          <i class="fas fa-user-tag"></i>
+          Assignments
+        </a>
+        <a href="{% url 'outcome_list' %}" class="nav-link">
+          <i class="fas fa-clipboard-check"></i>
+          Outcomes
+        </a>
+      </div>
+      
+      <div class="nav-section">
+        <div class="nav-section-title">System</div>
+        <a href="{% url 'admin:index' %}" class="nav-link">
+          <i class="fas fa-cog"></i>
+          Admin
+        </a>
+      </div>
+    </nav>
+  </div>
+  
+  <div class="main-content">
+    <div class="content-header">
+      <h1 class="h3 mb-0">{% block page_title %}Dashboard{% endblock %}</h1>
+    </div>
+    <div class="content-body">
+      {% block content %}{% endblock %}
+    </div>
   </div>
 
-  <footer class="footer">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <h5>Capstone Dashboard</h5>
-          <p>Manage your programs efficiently with our comprehensive platform.</p>
-        </div>
-        <div class="col-md-6 text-md-end">
-          <p>&copy; 2024 Capstone. All rights reserved.</p>
-        </div>
-      </div>
-    </div>
-  </footer>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('show');
+    }
+    
+    // Set active nav link
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentPath = window.location.pathname;
+      const navLinks = document.querySelectorAll('.nav-link');
+      
+      navLinks.forEach(link => {
+        if (link.getAttribute('href') === currentPath) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
 </body>
 </html>

@@ -1,0 +1,100 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{% if object %}Edit Equipment{% else %}Add Equipment{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h4>
+          <i class="fas fa-tools me-2"></i>
+          {% if object %}Edit Equipment{% else %}Add New Equipment{% endif %}
+        </h4>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.name.id_for_label }}" class="form-label">Name *</label>
+              {{ form.name }}
+              {% if form.name.errors %}
+                <div class="text-danger">{{ form.name.errors }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.facility.id_for_label }}" class="form-label">Facility *</label>
+              {{ form.facility }}
+              {% if form.facility.errors %}
+                <div class="text-danger">{{ form.facility.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.capabilities.id_for_label }}" class="form-label">Capabilities</label>
+              {{ form.capabilities }}
+              {% if form.capabilities.errors %}
+                <div class="text-danger">{{ form.capabilities.errors }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.inventory_code.id_for_label }}" class="form-label">Inventory Code</label>
+              {{ form.inventory_code }}
+              {% if form.inventory_code.errors %}
+                <div class="text-danger">{{ form.inventory_code.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.usage_domain.id_for_label }}" class="form-label">Usage Domain</label>
+              {{ form.usage_domain }}
+              {% if form.usage_domain.errors %}
+                <div class="text-danger">{{ form.usage_domain.errors }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.support_phase.id_for_label }}" class="form-label">Support Phase</label>
+              {{ form.support_phase }}
+              {% if form.support_phase.errors %}
+                <div class="text-danger">{{ form.support_phase.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+              <div class="text-danger">{{ form.description.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <a href="{% url 'equipment_list' %}" class="btn btn-secondary">
+              <i class="fas fa-arrow-left me-1"></i>Cancel
+            </a>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save me-1"></i>Save Equipment
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+      input.classList.add('form-control');
+    });
+  });
+</script>
+{% endblock %}

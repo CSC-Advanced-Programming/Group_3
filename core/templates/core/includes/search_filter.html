@@ -1,0 +1,103 @@
+{% load core_tags %}
+<!-- Search and Filter Component -->
+<div class="search-filter-section mb-4">
+    <form method="GET" class="row g-3" id="searchFilterForm">
+        <!-- Search Bar -->
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-text bg-light border-primary">
+                    <i class="fas fa-search text-primary"></i>
+                </span>
+                <input type="text" 
+                       class="form-control border-primary" 
+                       name="search" 
+                       value="{{ search_query }}" 
+                       placeholder="Search..." 
+                       id="searchInput">
+            </div>
+        </div>
+        
+        <!-- Filter Controls -->
+        {% for field_name, choices in filter_fields.items %}
+            {% if choices %}
+                <div class="col-md-2">
+                    <select name="{{ field_name }}" class="form-select border-primary" onchange="this.form.submit()">
+                        <option value="">All {{ field_name|title }}</option>
+                        {% for value, display in choices %}
+                            <option value="{{ value }}" 
+                                    {% if filter_params|lookup:field_name == value %}selected{% endif %}>
+                                {{ display }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endif %}
+        {% endfor %}
+        
+        <!-- Action Buttons -->
+        <div class="col-md-2">
+            <div class="btn-group w-100" role="group">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Search
+                </button>
+                <a href="?" class="btn btn-outline-secondary">
+                    <i class="fas fa-times"></i> Clear
+                </a>
+            </div>
+        </div>
+        
+        <!-- Preserve page parameter for pagination -->
+        {% if request.GET.page %}
+            <input type="hidden" name="page" value="{{ request.GET.page }}">
+        {% endif %}
+    </form>
+    
+    <!-- Results Summary -->
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <small class="text-muted">
+            Showing 
+            {% if is_paginated %}
+                {{ page_obj.start_index }}-{{ page_obj.end_index }} of {{ total_count }}
+            {% else %}
+                {{ total_count }}
+            {% endif %}
+            results
+            {% if search_query %}
+                for "{{ search_query }}"
+            {% endif %}
+        </small>
+        
+        <!-- Items per page selector -->
+        <div class="d-flex align-items-center">
+            <small class="text-muted me-2">Items per page:</small>
+            <select class="form-select form-select-sm border-primary" style="width: auto;" onchange="changeItemsPerPage(this.value)">
+                <option value="10" {% if request.GET.per_page == '10' %}selected{% endif %}>10</option>
+                <option value="15" {% if request.GET.per_page == '15' or not request.GET.per_page %}selected{% endif %}>15</option>
+                <option value="25" {% if request.GET.per_page == '25' %}selected{% endif %}>25</option>
+                <option value="50" {% if request.GET.per_page == '50' %}selected{% endif %}>50</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<script>
+// Auto-submit search form after typing delay
+let searchTimeout;
+document.getElementById('searchInput').addEventListener('input', function() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        this.form.submit();
+    }, 500); // 500ms delay after user stops typing
+});
+
+// Function to change items per page
+function changeItemsPerPage(value) {
+    const url = new URL(window.location);
+    url.searchParams.set('per_page', value);
+    url.searchParams.delete('page'); // Reset to first page
+    window.location.href = url.toString();
+}
+
+// Template filter for dictionary lookup
+// Note: This is handled by a custom template filter in Django
+</script>

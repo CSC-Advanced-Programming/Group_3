@@ -1,0 +1,101 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{% if object %}Edit Outcome{% else %}Add Outcome{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h4>
+          <i class="fas fa-clipboard-check me-2"></i>
+          {% if object %}Edit Outcome{% else %}Add New Outcome{% endif %}
+        </h4>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.title.id_for_label }}" class="form-label">Title *</label>
+              {{ form.title }}
+              {% if form.title.errors %}
+                <div class="text-danger">{{ form.title.errors }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.project.id_for_label }}" class="form-label">Project *</label>
+              {{ form.project }}
+              {% if form.project.errors %}
+                <div class="text-danger">{{ form.project.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.outcome_type.id_for_label }}" class="form-label">Outcome Type *</label>
+              {{ form.outcome_type }}
+              {% if form.outcome_type.errors %}
+                <div class="text-danger">{{ form.outcome_type.errors }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.commercialization_status.id_for_label }}" class="form-label">Commercialization Status</label>
+              {{ form.commercialization_status }}
+              {% if form.commercialization_status.errors %}
+                <div class="text-danger">{{ form.commercialization_status.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="{{ form.description.id_for_label }}" class="form-label">Description *</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+              <div class="text-danger">{{ form.description.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-3">
+            <label for="{{ form.artifact_link.id_for_label }}" class="form-label">Artifact Link</label>
+            {{ form.artifact_link }}
+            {% if form.artifact_link.errors %}
+              <div class="text-danger">{{ form.artifact_link.errors }}</div>
+            {% endif %}
+            <div class="form-text">Provide a URL link to the artifact (document, file, repository, etc.)</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="{{ form.quality_certification.id_for_label }}" class="form-label">Quality Certification</label>
+            {{ form.quality_certification }}
+            {% if form.quality_certification.errors %}
+              <div class="text-danger">{{ form.quality_certification.errors }}</div>
+            {% endif %}
+            <div class="form-text">Any compliance or test results (e.g., UIRI certification)</div>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <a href="{% url 'outcome_list' %}" class="btn btn-secondary">
+              <i class="fas fa-arrow-left me-1"></i>Cancel
+            </a>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save me-1"></i>Save Outcome
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+      input.classList.add('form-control');
+    });
+  });
+</script>
+{% endblock %}

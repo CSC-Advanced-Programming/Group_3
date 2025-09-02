@@ -1,0 +1,117 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{% if object %}Edit Project{% else %}Add Project{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">
+        <h4>
+          <i class="fas fa-project-diagram me-2"></i>
+          {% if object %}Edit Project{% else %}Add New Project{% endif %}
+        </h4>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.title.id_for_label }}" class="form-label">Title *</label>
+              {{ form.title }}
+              {% if form.title.errors %}
+                <div class="text-danger">{{ form.title.errors }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.nature_of_project.id_for_label }}" class="form-label">Nature of Project *</label>
+              {{ form.nature_of_project }}
+              {% if form.nature_of_project.errors %}
+                <div class="text-danger">{{ form.nature_of_project.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.program.id_for_label }}" class="form-label">Program *</label>
+              {{ form.program }}
+              {% if form.program.errors %}
+                <div class="text-danger">{{ form.program.errors }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.facility.id_for_label }}" class="form-label">Facility *</label>
+              {{ form.facility }}
+              {% if form.facility.errors %}
+                <div class="text-danger">{{ form.facility.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="{{ form.description.id_for_label }}" class="form-label">Description *</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+              <div class="text-danger">{{ form.description.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.innovation_focus.id_for_label }}" class="form-label">Innovation Focus</label>
+              {{ form.innovation_focus }}
+              {% if form.innovation_focus.errors %}
+                <div class="text-danger">{{ form.innovation_focus.errors }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.prototype_stage.id_for_label }}" class="form-label">Prototype Stage</label>
+              {{ form.prototype_stage }}
+              {% if form.prototype_stage.errors %}
+                <div class="text-danger">{{ form.prototype_stage.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="{{ form.testing_requirements.id_for_label }}" class="form-label">Testing Requirements</label>
+            {{ form.testing_requirements }}
+            {% if form.testing_requirements.errors %}
+              <div class="text-danger">{{ form.testing_requirements.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-3">
+            <label for="{{ form.commercialization_plan.id_for_label }}" class="form-label">Commercialization Plan</label>
+            {{ form.commercialization_plan }}
+            {% if form.commercialization_plan.errors %}
+              <div class="text-danger">{{ form.commercialization_plan.errors }}</div>
+            {% endif %}
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <a href="{% url 'project_list' %}" class="btn btn-secondary">
+              <i class="fas fa-arrow-left me-1"></i>Cancel
+            </a>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save me-1"></i>Save Project
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Add Bootstrap classes to form fields
+  document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('input, select, textarea');
+    inputs.forEach(input => {
+      input.classList.add('form-control');
+    });
+  });
+</script>
+{% endblock %}

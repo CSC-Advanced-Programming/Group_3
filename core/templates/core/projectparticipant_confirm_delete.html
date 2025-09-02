@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Remove Project Participant{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card border-danger">
+      <div class="card-header bg-danger text-white">
+        <h4><i class="fas fa-exclamation-triangle me-2"></i>Remove Project Participant</h4>
+      </div>
+      <div class="card-body">
+        <p>Are you sure you want to remove <strong>"{{ object.participant.full_name }}"</strong> from project <strong>"{{ object.project.title }}"</strong>?</p>
+        <p class="text-muted">This action cannot be undone.</p>
+        
+        <div class="alert alert-warning">
+          <strong>Assignment Details:</strong><br>
+          <strong>Participant:</strong> {{ object.participant.full_name }}<br>
+          <strong>Project:</strong> {{ object.project.title }}<br>
+          <strong>Role:</strong> {{ object.role_on_project }}<br>
+          <strong>Skill Role:</strong> {{ object.skill_role }}
+        </div>
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="d-flex justify-content-between">
+            <a href="{% url 'projectparticipant_detail' object.pk %}" class="btn btn-secondary">
+              <i class="fas fa-arrow-left me-1"></i>Cancel
+            </a>
+            <button type="submit" class="btn btn-danger">
+              <i class="fas fa-trash me-1"></i>Yes, Remove
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
