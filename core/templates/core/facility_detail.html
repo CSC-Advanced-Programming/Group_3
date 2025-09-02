@@ -78,15 +78,43 @@
                 <p>No projects associated with this facility.</p>
               {% endif %}
 
-              <h5 class="text-primary mb-2"><i class="fas fa-tools me-2"></i>Associated Equipment</h5>
+              <h5 class="text-primary mb-3"><i class="fas fa-tools me-2"></i>Associated Equipment</h5>
               {% if facility.equipment.all %}
-                <ul>
+                <div class="row">
                   {% for item in facility.equipment.all %}
-                    <li>{{ item.name }}</li>
+                    <div class="col-md-6 mb-3">
+                      <div class="card border-left-primary">
+                        <div class="card-body p-3">
+                          <h6 class="card-title mb-2">
+                            <a href="{% url 'equipment_detail' item.pk %}" class="text-decoration-none">
+                              <i class="fas fa-cog me-1"></i>{{ item.name }}
+                            </a>
+                          </h6>
+                          {% if item.usage_domain %}
+                            <span class="badge bg-primary me-1">{{ item.usage_domain }}</span>
+                          {% endif %}
+                          {% if item.support_phase %}
+                            <span class="badge bg-success">{{ item.support_phase }}</span>
+                          {% endif %}
+                          {% if item.capabilities %}
+                            <p class="card-text small text-muted mt-2 mb-0">{{ item.capabilities|truncatechars:60 }}</p>
+                          {% endif %}
+                        </div>
+                      </div>
+                    </div>
                   {% endfor %}
-                </ul>
+                </div>
+                <div class="mt-2">
+                  <a href="{% url 'equipment_list' %}?facility={{ facility.pk }}" class="btn btn-sm btn-outline-primary">
+                    <i class="fas fa-external-link-alt me-1"></i>View All Equipment ({{ facility.equipment.all.count }})
+                  </a>
+                </div>
               {% else %}
-                <p>No equipment associated with this facility.</p>
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle me-2"></i>
+                  No equipment associated with this facility yet.
+                  <a href="{% url 'equipment_create' %}" class="alert-link">Add equipment</a>.
+                </div>
               {% endif %}
 
               <h5 class="text-primary mb-2"><i class="fas fa-concierge-bell me-2"></i>Associated Services</h5>
