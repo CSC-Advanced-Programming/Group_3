@@ -1,0 +1,3 @@
+## Python dependencies for this project
+# Pin to the Django version indicated by the project scaffold
+Django
