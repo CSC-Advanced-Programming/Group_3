@@ -40,11 +40,23 @@
           </tr>
           <tr>
             <th>Program:</th>
-            <td><a href="{% url 'program_detail' project.program.pk %}">{{ project.program.name }}</a></td>
+            <td>
+              {% if project.program %}
+                <a href="{% url 'program_detail' project.program.pk %}">{{ project.program.name }}</a>
+              {% else %}
+                <span class="text-muted">No program assigned</span>
+              {% endif %}
+            </td>
           </tr>
           <tr>
             <th>Facility:</th>
-            <td><a href="{% url 'facility_detail' project.facility.pk %}">{{ project.facility.name }}</a></td>
+            <td>
+              {% if project.facility %}
+                <a href="{% url 'facility_detail' project.facility.pk %}">{{ project.facility.name }}</a>
+              {% else %}
+                <span class="text-muted">No facility assigned</span>
+              {% endif %}
+            </td>
           </tr>
           <tr>
             <th>Innovation Focus:</th>

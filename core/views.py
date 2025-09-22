@@ -2,6 +2,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.db.models import Q
 from .models import Program, Facility, Project, Equipment, Service, Participant, ProjectParticipant, Outcome
+from .forms import ProjectForm, EquipmentForm, ServiceForm, ParticipantForm, ProjectParticipantForm, OutcomeForm
 from .utils import SearchFilterMixin, get_model_field_choices, get_related_model_choices
 # Project Views
 class ProjectListView(SearchFilterMixin, ListView):
@@ -80,13 +81,13 @@ class ProjectDetailView(DetailView):
 
 class ProjectCreateView(CreateView):
     model = Project
-    fields = ["program", "facility", "title", "nature_of_project", "description", "innovation_focus", "prototype_stage", "testing_requirements", "commercialization_plan"]
+    form_class = ProjectForm
     template_name = "core/project_form.html"
     success_url = reverse_lazy("project_list")
 
 class ProjectUpdateView(UpdateView):
     model = Project
-    fields = ["program", "facility", "title", "nature_of_project", "description", "innovation_focus", "prototype_stage", "testing_requirements", "commercialization_plan"]
+    form_class = ProjectForm
     template_name = "core/project_form.html"
     success_url = reverse_lazy("project_list")
 
@@ -158,13 +159,13 @@ class EquipmentDetailView(DetailView):
 
 class EquipmentCreateView(CreateView):
     model = Equipment
-    fields = ["facility", "name", "capabilities", "description", "inventory_code", "usage_domain", "support_phase"]
+    form_class = EquipmentForm
     template_name = "core/equipment_form.html"
     success_url = reverse_lazy("equipment_list")
 
 class EquipmentUpdateView(UpdateView):
     model = Equipment
-    fields = ["facility", "name", "capabilities", "description", "inventory_code", "usage_domain", "support_phase"]
+    form_class = EquipmentForm
     template_name = "core/equipment_form.html"
     success_url = reverse_lazy("equipment_list")
 
@@ -236,13 +237,13 @@ class ServiceDetailView(DetailView):
 
 class ServiceCreateView(CreateView):
     model = Service
-    fields = ["facility", "name", "description", "category", "skill_type"]
+    form_class = ServiceForm
     template_name = "core/service_form.html"
     success_url = reverse_lazy("service_list")
 
 class ServiceUpdateView(UpdateView):
     model = Service
-    fields = ["facility", "name", "description", "category", "skill_type"]
+    form_class = ServiceForm
     template_name = "core/service_form.html"
     success_url = reverse_lazy("service_list")
 
@@ -322,13 +323,13 @@ class ParticipantDetailView(DetailView):
 
 class ParticipantCreateView(CreateView):
     model = Participant
-    fields = ["full_name", "email", "affiliation", "specialization", "cross_skill_trained", "institution"]
+    form_class = ParticipantForm
     template_name = "core/participant_form.html"
     success_url = reverse_lazy("participant_list")
 
 class ParticipantUpdateView(UpdateView):
     model = Participant
-    fields = ["full_name", "email", "affiliation", "specialization", "cross_skill_trained", "institution"]
+    form_class = ParticipantForm
     template_name = "core/participant_form.html"
     success_url = reverse_lazy("participant_list")
 
@@ -402,13 +403,13 @@ class ProjectParticipantDetailView(DetailView):
 
 class ProjectParticipantCreateView(CreateView):
     model = ProjectParticipant
-    fields = ["project", "participant", "role_on_project", "skill_role"]
+    form_class = ProjectParticipantForm
     template_name = "core/projectparticipant_form.html"
     success_url = reverse_lazy("projectparticipant_list")
 
 class ProjectParticipantUpdateView(UpdateView):
     model = ProjectParticipant
-    fields = ["project", "participant", "role_on_project", "skill_role"]
+    form_class = ProjectParticipantForm
     template_name = "core/projectparticipant_form.html"
     success_url = reverse_lazy("projectparticipant_list")
 
@@ -482,13 +483,13 @@ class OutcomeDetailView(DetailView):
 
 class OutcomeCreateView(CreateView):
     model = Outcome
-    fields = ["project", "title", "description", "artifact_link", "outcome_type", "quality_certification", "commercialization_status"]
+    form_class = OutcomeForm
     template_name = "core/outcome_form.html"
     success_url = reverse_lazy("outcome_list")
 
 class OutcomeUpdateView(UpdateView):
     model = Outcome
-    fields = ["project", "title", "description", "artifact_link", "outcome_type", "quality_certification", "commercialization_status"]
+    form_class = OutcomeForm
     template_name = "core/outcome_form.html"
     success_url = reverse_lazy("outcome_list")
 
@@ -501,6 +502,13 @@ from django.db.models import ProtectedError
 
 class HomeView(TemplateView):
     template_name = "core/home.html"
+
+    def get_context_data(self, **kwargs):
+        """Add statistics to the context."""
+        context = super().get_context_data(**kwargs)
+        # Get all programs for the stats
+        context['programs'] = Program.objects.all()
+        return context
 
 class ProgramListView(SearchFilterMixin, ListView):
     model = Program
@@ -561,6 +569,13 @@ class ProgramDetailView(DetailView):
     model = Program
     template_name = "core/program_detail.html"
     context_object_name = "program"
+
+    def get_context_data(self, **kwargs):
+        """Add associated projects to the context."""
+        context = super().get_context_data(**kwargs)
+        # Get all projects associated with this program
+        context['associated_projects'] = self.object.projects.select_related('facility').all()
+        return context
 
 class ProgramCreateView(CreateView):
     model = Program
