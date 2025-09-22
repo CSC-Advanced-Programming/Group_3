@@ -9,14 +9,16 @@
       <li class="breadcrumb-item active">{{ program.name }}</li>
     </ol>
   </nav>
-  
+
   <div class="row justify-content-center">
     <div class="col-lg-12">
+      <!-- Main Program Card -->
       <div class="card border-0 shadow-sm mb-4">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-          <h1 class="h4 mb-0">
-            <i class="fas fa-project-diagram me-2"></i>{{ program.name }}
-          </h1>
+          <div>
+            <h1 class="h4 mb-0"><i class="fas fa-project-diagram me-2"></i>{{ program.name }}</h1>
+            <p class="text-white-50 mb-0">{{ program.program_id }}</p>
+          </div>
           <div class="btn-group" role="group">
             <a href="{% url 'program_update' program.pk %}" class="btn btn-sm btn-outline-light" title="Edit">
               <i class="fas fa-edit me-1"></i>Edit
@@ -26,6 +28,7 @@
             </a>
           </div>
         </div>
+
         <div class="card-body">
           <div class="row">
             <div class="col-md-8">
@@ -35,64 +38,53 @@
                 </div>
                 <div>
                   <h2 class="h4 mb-1">{{ program.name }}</h2>
-                  <p class="text-muted mb-0">
-                    <span class="badge bg-primary me-2">{{ program.program_id }}</span>
-                    <i class="fas fa-circle text-success me-1" style="font-size: 8px;"></i>Active
-                  </p>
+                  <p class="text-muted mb-0">{{ program.program_id }}</p>
                 </div>
               </div>
 
               {% if program.description %}
                 <div class="mb-4">
-                  <h5 class="border-bottom pb-2 mb-3">
-                    <i class="fas fa-align-left me-2 text-primary"></i>Description
-                  </h5>
+                  <h5 class="border-bottom pb-2 mb-3"><i class="fas fa-align-left me-2 text-primary"></i>Description</h5>
                   <p class="lead">{{ program.description }}</p>
                 </div>
               {% endif %}
 
               <div class="row mb-4">
                 {% if program.national_alignment %}
-                  <div class="col-md-4">
-                    <div class="card bg-light mb-3">
-                      <div class="card-body p-3">
-                        <h6 class="mb-2 text-primary">
-                          <i class="fas fa-map-marker-alt me-2"></i>National Alignment
-                        </h6>
-                        <p class="mb-0">{{ program.national_alignment }}</p>
-                      </div>
+                <div class="col-md-4">
+                  <div class="card bg-light mb-3">
+                    <div class="card-body p-3">
+                      <h6 class="mb-2 text-primary"><i class="fas fa-map-marker-alt me-2"></i>National Alignment</h6>
+                      <p class="mb-0">{{ program.national_alignment }}</p>
                     </div>
                   </div>
+                </div>
                 {% endif %}
 
                 {% if program.focus_areas %}
-                  <div class="col-md-4">
-                    <div class="card bg-light mb-3">
-                      <div class="card-body p-3">
-                        <h6 class="mb-2 text-primary">
-                          <i class="fas fa-bullseye me-2"></i>Focus Areas
-                        </h6>
-                        <p class="mb-0">{{ program.focus_areas }}</p>
-                      </div>
+                <div class="col-md-4">
+                  <div class="card bg-light mb-3">
+                    <div class="card-body p-3">
+                      <h6 class="mb-2 text-primary"><i class="fas fa-bullseye me-2"></i>Focus Areas</h6>
+                      <p class="mb-0">{{ program.focus_areas }}</p>
                     </div>
                   </div>
+                </div>
                 {% endif %}
 
                 {% if program.phases %}
-                  <div class="col-md-4">
-                    <div class="card bg-light mb-3">
-                      <div class="card-body p-3">
-                        <h6 class="mb-2 text-primary">
-                          <i class="fas fa-tasks me-2"></i>Phases
-                        </h6>
-                        <p class="mb-0">{{ program.phases }}</p>
-                      </div>
+                <div class="col-md-4">
+                  <div class="card bg-light mb-3">
+                    <div class="card-body p-3">
+                      <h6 class="mb-2 text-primary"><i class="fas fa-tasks me-2"></i>Phases</h6>
+                      <p class="mb-0">{{ program.phases }}</p>
                     </div>
                   </div>
+                </div>
                 {% endif %}
               </div>
-              
-              <!-- Program Stats - Showing only direct relationships per ERD -->
+
+              <!-- Program Stats -->
               <div class="row mb-4">
                 <div class="col-md-12 mb-3">
                   <div class="card h-100 border-0 shadow-sm">
@@ -112,51 +104,81 @@
 
             <div class="col-md-4">
               <div class="d-grid gap-2 mb-4">
-                <a href="{% url 'program_update' program.pk %}" class="btn btn-outline-primary">
-                  <i class="fas fa-edit me-2"></i>Edit Program
-                </a>
-                <a href="{% url 'program_delete' program.pk %}" class="btn btn-outline-danger">
-                  <i class="fas fa-trash-alt me-2"></i>Delete Program
-                </a>
+                <a href="{% url 'program_update' program.pk %}" class="btn btn-outline-primary"><i class="fas fa-edit me-2"></i>Edit Program</a>
+                <a href="{% url 'program_delete' program.pk %}" class="btn btn-outline-danger"><i class="fas fa-trash-alt me-2"></i>Delete Program</a>
               </div>
 
               <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body">
-                  <h6 class="mb-3 text-primary">
-                    <i class="fas fa-info-circle me-2"></i>Program Details
-                  </h6>
+                  <h6 class="mb-3 text-primary"><i class="fas fa-info-circle me-2"></i>Program Details</h6>
                   <ul class="list-unstyled mb-0">
                     {% if program.program_id %}
-                      <li class="d-flex justify-content-between py-2 border-bottom">
-                        <span class="text-muted">Program ID:</span>
-                        <span class="fw-bold">{{ program.program_id }}</span>
-                      </li>
+                    <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Program ID:</span><span class="fw-bold">{{ program.program_id }}</span></li>
                     {% endif %}
-                    <li class="d-flex justify-content-between py-2 border-bottom">
-                      <span class="text-muted">Created:</span>
-                      <span>{{ program.created_at|date:"M d, Y"|default:"N/A" }}</span>
-                    </li>
-                    <li class="d-flex justify-content-between py-2">
-                      <span class="text-muted">Last Updated:</span>
-                      <span>{{ program.updated_at|date:"M d, Y"|default:"N/A" }}</span>
-                    </li>
+                    <li class="d-flex justify-content-between py-2 border-bottom"><span class="text-muted">Created:</span><span>{{ program.created_at|date:"M d, Y"|default:"N/A" }}</span></li>
+                    <li class="d-flex justify-content-between py-2"><span class="text-muted">Last Updated:</span><span>{{ program.updated_at|date:"M d, Y"|default:"N/A" }}</span></li>
                   </ul>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="card-footer">
-          <a href="{% url 'program_list' %}" class="btn btn-secondary">
-            <i class="fas fa-arrow-left me-1"></i>Back to Programs
-          </a>
+      </div>
+
+      <!-- Associated Projects List (full-width section below program card) -->
+      <div class="row justify-content-center mt-4 project-grid">
+        <div class="col-lg-12">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0">Projects in "{{ program.name }}"</h4>
+            <small class="text-muted">{{ projects|length }} project{{ projects|length|pluralize }}</small>
+          </div>
+
+          <style>
+            /* Scoped styles for project grid - kept near the section */
+            .project-grid .project-card { border-radius: 12px; overflow: hidden; }
+            .project-grid .project-card .card-body { display: flex; flex-direction: column; min-height: 190px; }
+            .project-grid .project-card .card-title a { color: var(--primary-blue); font-weight: 600; text-decoration: none; }
+            .project-grid .project-card .project-id { font-size: 0.85rem; color: #6b7280; }
+            .project-grid .project-card .card-text { color: #374151; overflow: hidden; max-height: 4.5rem; }
+            .project-grid .project-card .meta { font-size: 0.82rem; color: #6b7280; }
+            .project-grid .project-card .facility-badge { font-size: 0.75rem; }
+            .project-grid .project-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(2,6,23,0.12); }
+            @media (max-width: 576px) { .project-grid .project-card .card-body { min-height: 160px; } }
+          </style>
+
+          {% if projects and projects.exists %}
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+              {% for project in projects %}
+                <div class="col">
+                  <div class="card h-100 project-card shadow-sm">
+                    <div class="card-body d-flex flex-column">
+                      <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title mb-0"><a href="{% url 'project_detail' project.pk %}" class="stretched-link">{{ project.title|default:'Untitled Project' }}</a></h5>
+                        {% if project.facility %}<span class="badge bg-light text-primary facility-badge">{{ project.facility.name }}</span>{% endif %}
+                      </div>
+
+                      <p class="project-id mb-1">{{ project.project_id }}</p>
+
+                      <p class="card-text mb-3">{{ project.description|default:'No description' }}</p>
+
+                      <div class="mt-auto d-flex justify-content-between align-items-center pt-2">
+                        <div class="meta"><small class="text-muted">{{ project.nature_of_project }}</small></div>
+                        <a href="{% url 'project_detail' project.pk %}" class="btn btn-sm btn-outline-primary">View Project</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="alert alert-info">No projects are associated with this program yet.</div>
+          {% endif %}
         </div>
       </div>
-      
-      <div class="card-footer bg-white p-3">
-        <a href="{% url 'program_list' %}" class="btn btn-outline-secondary">
-          <i class="fas fa-arrow-left me-1"></i>Back to Programs
-        </a>
+
+      <!-- Single bottom footer button -->
+      <div class="mt-4">
+        <a href="{% url 'program_list' %}" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i>Back to Programs</a>
       </div>
     </div>
   </div>

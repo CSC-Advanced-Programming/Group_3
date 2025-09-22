@@ -606,22 +606,17 @@ class ProgramDetailView(DetailView):
     model = Program
     template_name = "core/program_detail.html"
     context_object_name = "program"
-    
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        program = self.object
-        
-        # Get associated projects (direct 1-to-many relationship per ERD)
-        projects = program.projects.all()
-        context['projects'] = projects
-        
-        return context
+        """Add associated projects to the context.
 
-    def get_context_data(self, **kwargs):
-        """Add associated projects to the context."""
+        Ensure `projects` is present for templates that expect it and also
+        provide `associated_projects` for backward compatibility.
+        """
         context = super().get_context_data(**kwargs)
-        # Get all projects associated with this program
-        context['associated_projects'] = self.object.projects.select_related('facility').all()
+        # Get all projects associated with this program and include facility
+        projects_qs = self.object.projects.select_related('facility').all()
+        context['projects'] = projects_qs
+        context['associated_projects'] = projects_qs
         return context
 
 class ProgramCreateView(CreateView):
