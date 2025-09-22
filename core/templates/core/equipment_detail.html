@@ -3,6 +3,18 @@
 {% block title %}{{ equipment.name }}{% endblock %}
 
 {% block content %}
+<!-- Breadcrumb Navigation -->
+<nav aria-label="breadcrumb" class="mb-3">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'equipment_list' %}">Equipment</a></li>
+    {% if equipment.facility %}
+      <li class="breadcrumb-item"><a href="{% url 'facility_detail' equipment.facility.pk %}">{{ equipment.facility.name }}</a></li>
+    {% endif %}
+    <li class="breadcrumb-item active" aria-current="page">{{ equipment.name }}</li>
+  </ol>
+</nav>
+
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h2><i class="fas fa-tools me-2"></i>{{ equipment.name }}</h2>
   <div>
@@ -58,6 +70,48 @@
       </div>
     </div>
 
+    <!-- Relationship Summary -->
+    <div class="card mt-4">
+      <div class="card-header">
+        <h5><i class="fas fa-sitemap me-2"></i>Relationships</h5>
+      </div>
+      <div class="card-body">
+        <div class="row text-center">
+          <div class="col-md-4">
+            <div class="mb-3">
+              <h3 class="text-primary mb-0">1</h3>
+              <small class="text-muted">Facility</small>
+            </div>
+            <a href="{% url 'facility_detail' equipment.facility.pk %}" class="btn btn-sm btn-outline-primary">
+              View Facility
+            </a>
+          </div>
+          <div class="col-md-4">
+            <div class="mb-3">
+              <h3 class="text-info mb-0">{{ equipment.facility.projects.all.count }}</h3>
+              <small class="text-muted">Related Projects</small>
+            </div>
+            {% if equipment.facility.projects.all.count > 0 %}
+              <a href="{% url 'project_list' %}?facility={{ equipment.facility.pk }}" class="btn btn-sm btn-outline-info">
+                View Projects
+              </a>
+            {% endif %}
+          </div>
+          <div class="col-md-4">
+            <div class="mb-3">
+              <h3 class="text-success mb-0">{{ equipment.facility.equipment.all.count|add:"-1" }}</h3>
+              <small class="text-muted">Other Equipment</small>
+            </div>
+            {% if equipment.facility.equipment.all.count > 1 %}
+              <a href="{% url 'equipment_list' %}?facility={{ equipment.facility.pk }}" class="btn btn-sm btn-outline-success">
+                View All
+              </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
     {% if equipment.description %}
     <div class="card mt-4">
       <div class="card-header">
@@ -71,18 +125,83 @@
   </div>
 
   <div class="col-md-4">
-    <div class="card">
+    <!-- Facility Information -->
+    <div class="card mb-4">
       <div class="card-header">
         <h5><i class="fas fa-building me-2"></i>Facility Information</h5>
       </div>
       <div class="card-body">
-        <h6>{{ equipment.facility.name }}</h6>
-        <p class="text-muted mb-2">{{ equipment.facility.location }}</p>
-        <p><strong>Type:</strong> {{ equipment.facility.facility_type }}</p>
-        <p><strong>Partner:</strong> {{ equipment.facility.partner_organization|default:"N/A" }}</p>
-        <a href="{% url 'facility_detail' equipment.facility.pk %}" class="btn btn-sm btn-outline-primary">
-          View Facility Details
-        </a>
+        <h6><a href="{% url 'facility_detail' equipment.facility.pk %}" class="text-decoration-none">{{ equipment.facility.name }}</a></h6>
+        <p class="text-muted mb-2"><i class="fas fa-map-marker-alt me-1"></i>{{ equipment.facility.location }}</p>
+        <p class="mb-1"><strong>Type:</strong> 
+          <span class="badge bg-info">{{ equipment.facility.facility_type|default:"N/A" }}</span>
+        </p>
+        <p class="mb-3"><strong>Partner:</strong> {{ equipment.facility.partner_organization|default:"N/A" }}</p>
+        
+        <div class="d-grid">
+          <a href="{% url 'facility_detail' equipment.facility.pk %}" class="btn btn-sm btn-outline-primary">
+            <i class="fas fa-external-link-alt me-1"></i>View Facility Details
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Projects at This Facility -->
+    <div class="card mb-4">
+      <div class="card-header">
+        <h5><i class="fas fa-project-diagram me-2"></i>Related Projects</h5>
+      </div>
+      <div class="card-body">
+        {% if equipment.facility.projects.all %}
+          <p class="text-muted small mb-2">Projects using this facility's resources:</p>
+          {% for project in equipment.facility.projects.all|slice:":5" %}
+            <div class="mb-2">
+              <a href="{% url 'project_detail' project.pk %}" class="text-decoration-none">
+                <i class="fas fa-folder-open me-1"></i>{{ project.title }}
+              </a>
+              <br><small class="text-muted">{{ project.nature_of_project }} • {{ project.program.name }}</small>
+            </div>
+          {% endfor %}
+          {% if equipment.facility.projects.all.count > 5 %}
+            <div class="mt-2">
+              <a href="{% url 'facility_detail' equipment.facility.pk %}" class="btn btn-sm btn-link p-0">
+                View all {{ equipment.facility.projects.all.count }} projects →
+              </a>
+            </div>
+          {% endif %}
+        {% else %}
+          <p class="text-muted mb-0">No projects currently using this facility.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Other Equipment at This Facility -->
+    <div class="card">
+      <div class="card-header">
+        <h5><i class="fas fa-tools me-2"></i>Other Equipment Here</h5>
+      </div>
+      <div class="card-body">
+        {% if equipment.facility.equipment.all %}
+          {% for other_equipment in equipment.facility.equipment.all|slice:":4" %}
+            {% if other_equipment.pk != equipment.pk %}
+              <div class="mb-2">
+                <a href="{% url 'equipment_detail' other_equipment.pk %}" class="text-decoration-none">
+                  <i class="fas fa-cog me-1"></i>{{ other_equipment.name }}
+                </a>
+                {% if other_equipment.usage_domain %}
+                  <br><small class="text-muted">{{ other_equipment.usage_domain }}</small>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% endfor %}
+          <div class="mt-2">
+            <a href="{% url 'facility_detail' equipment.facility.pk %}" class="btn btn-sm btn-link p-0">
+              View all equipment at this facility →
+            </a>
+          </div>
+        {% else %}
+          <p class="text-muted mb-0">This is the only equipment at this facility.</p>
+        {% endif %}
       </div>
     </div>
   </div>

@@ -4,7 +4,10 @@
 {% block content %}
   <!-- Page Header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="mb-0" style="color: var(--primary-blue);"><i class="fas fa-tools me-3"></i>Equipment</h1>
+    <div>
+      <h1 class="mb-0" style="color: var(--primary-blue);"><i class="fas fa-tools me-3"></i>Equipment</h1>
+      <p class="text-muted mb-0">Manage facility equipment and resources across {{ total_count }} items</p>
+    </div>
     <a href="{% url 'equipment_create' %}" class="btn btn-blue">
       <i class="fas fa-plus me-2"></i>Add New Equipment
     </a>
@@ -40,17 +43,26 @@
                       <i class="fas fa-tools me-2" style="color: var(--primary-blue);"></i>
                       <div>
                         <div class="fw-medium">{{ equipment.name|truncatechars:40 }}</div>
-                        {% if equipment.description %}
-                          <small class="text-muted">{{ equipment.description|truncatechars:60 }}</small>
+                        {% if equipment.capabilities %}
+                          <small class="text-muted"><i class="fas fa-cogs me-1"></i>{{ equipment.capabilities|truncatechars:50 }}</small>
+                        {% elif equipment.description %}
+                          <small class="text-muted">{{ equipment.description|truncatechars:50 }}</small>
                         {% endif %}
                       </div>
                     </div>
                   </td>
                   <td>
                     {% if equipment.facility %}
-                      <span class="badge bg-light text-dark border">
-                        <i class="fas fa-building me-1"></i>{{ equipment.facility.name }}
-                      </span>
+                      <div>
+                        <a href="{% url 'facility_detail' equipment.facility.pk %}" class="text-decoration-none">
+                          <span class="badge bg-light text-dark border">
+                            <i class="fas fa-building me-1"></i>{{ equipment.facility.name }}
+                          </span>
+                        </a>
+                        {% if equipment.facility.facility_type %}
+                          <br><small class="text-muted">{{ equipment.facility.facility_type }}</small>
+                        {% endif %}
+                      </div>
                     {% else %}
                       <span class="text-muted">—</span>
                     {% endif %}

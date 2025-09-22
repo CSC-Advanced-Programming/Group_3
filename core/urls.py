@@ -47,6 +47,7 @@ urlpatterns = [
     # ProjectParticipant URLs
     path('projectparticipants/', views.ProjectParticipantListView.as_view(), name='projectparticipant_list'),
     path('projectparticipants/create/', views.ProjectParticipantCreateView.as_view(), name='projectparticipant_create'),
+    path('projects/<int:project_id>/add-participant/', views.ProjectParticipantForProjectCreateView.as_view(), name='project_participant_create'),
     path('projectparticipants/<int:pk>/', views.ProjectParticipantDetailView.as_view(), name='projectparticipant_detail'),
     path('projectparticipants/<int:pk>/update/', views.ProjectParticipantUpdateView.as_view(), name='projectparticipant_update'),
     path('projectparticipants/<int:pk>/delete/', views.ProjectParticipantDeleteView.as_view(), name='projectparticipant_delete'),
