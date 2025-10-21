@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 import re
@@ -46,8 +47,27 @@ class Program(models.Model):
             self.program_id = f'Pg-{new_number:03d}'
         super().save(*args, **kwargs)
 
+    def clean(self):
+        """Custom validation for Program business rules."""
+        # Business Rule: If focus_areas set, national_alignment must be present
+        if self.focus_areas and (not self.national_alignment):
+            raise ValidationError({'national_alignment': 'When FocusAreas is set, NationalAlignment must also be valid.'})
+
+        # Business Rule: name must be unique case-insensitive
+        qs = Program.objects.filter(name__iexact=self.name)
+        if self.pk:
+            qs = qs.exclude(pk=self.pk)
+        if qs.exists():
+            raise ValidationError({'name': 'Program name must be unique (case-insensitive).'})
+
     def __str__(self):
         return self.name
+
+    def delete(self, *args, **kwargs):
+        # Prevent deletion if related Projects exist (lifecycle protection)
+        if self.projects.exists():
+            raise ValidationError('Cannot delete Program with linked Projects.')
+        return super().delete(*args, **kwargs)
 
 PARTNER_ORGANIZATION_CHOICES = (
     ('UniPod', 'UniPod'),
