@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.functions import Lower
 from django.core.exceptions import ValidationError
 
 # Create your models here.
@@ -224,21 +225,30 @@ class Service(models.Model):
     def __str__(self):
         return self.name
 class Participant(models.Model):
+    """
+    Participant Entity - Represents individuals involved in projects.
+    
+    Business Rules:
+    - BR1: Required Fields - FullName, Email, and Affiliation must be provided
+    - BR2: Email Uniqueness - Email must be unique (case-insensitive)
+    - BR3: Specialization Requirement - CrossSkillTrained can only be true if Specialization is set
+    """
     participant_id = models.CharField(max_length=10, unique=True, blank=True, null=True)
-    full_name = models.CharField(max_length=200, default='Unknown Participant')
-    email = models.EmailField(unique=True, default='unknown@example.com')
+    full_name = models.CharField(max_length=200)  # BR1: Required field
+    # remove field-level unique=True so we can enforce case-insensitive uniqueness
+    email = models.EmailField()  # BR1: Required, BR2: Unique (case-insensitive via DB constraint)
     affiliation = models.CharField(max_length=100, choices=(
         ('CS', 'CS'),
         ('SE', 'SE'),
         ('Engineering', 'Engineering'),
         ('Other', 'Other'),
-    ), default='Other')
+    ))  # BR1: Required field
     specialization = models.CharField(max_length=100, choices=(
         ('Software', 'Software'),
         ('Hardware', 'Hardware'),
         ('Business', 'Business'),
-    ), default='Software')
-    cross_skill_trained = models.BooleanField(default=False)
+    ), blank=True, null=True)  # BR3: Optional, but required if cross_skill_trained is True
+    cross_skill_trained = models.BooleanField(default=False)  # BR3: Can only be True if specialization is set
     institution = models.CharField(max_length=100, choices=(
         ('SCIT', 'SCIT'),
         ('CEDAT', 'CEDAT'),
@@ -247,7 +257,39 @@ class Participant(models.Model):
         ('Lwera', 'Lwera'),
     ), default='SCIT')
 
+    def clean(self):
+        """
+        Validate business rules before saving.
+        """
+        from django.core.exceptions import ValidationError
+        errors = {}
+
+        # BR1: Required Fields - FullName, Email, and Affiliation must be provided
+        if not self.full_name or not self.full_name.strip():
+            errors['full_name'] = "Participant.FullName, Participant.Email, and Participant.Affiliation are required."
+        
+        if not self.email or not self.email.strip():
+            if 'email' not in errors:
+                errors['email'] = "Participant.FullName, Participant.Email, and Participant.Affiliation are required."
+        
+        if not self.affiliation:
+            errors['affiliation'] = "Participant.FullName, Participant.Email, and Participant.Affiliation are required."
+
+        # BR2: Email Uniqueness (case-insensitive)
+        if self.email:
+            existing = Participant.objects.filter(email__iexact=self.email).exclude(pk=self.pk)
+            if existing.exists():
+                errors['email'] = "Participant.Email already exists."
+
+        # BR3: Specialization Requirement - CrossSkillTrained can only be true if Specialization is set
+        if self.cross_skill_trained and not self.specialization:
+            errors['cross_skill_trained'] = "Cross-skill flag requires Specialization."
+
+        if errors:
+            raise ValidationError(errors)
+
     def save(self, *args, **kwargs):
+        # Auto-generate participant_id if not provided
         if not self.participant_id:
             last_participant = Participant.objects.order_by('-participant_id').first()
             if last_participant and last_participant.participant_id:
@@ -260,10 +302,18 @@ class Participant(models.Model):
             else:
                 new_number = 1
             self.participant_id = f'PT-{new_number:03d}'
+        
+        # Run validation before saving
+        self.full_clean()
         super().save(*args, **kwargs)
 
     def __str__(self):
         return self.full_name
+    class Meta:
+        constraints = [
+            # Enforce case-insensitive uniqueness at the DB level for email
+            models.UniqueConstraint(Lower('email'), name='unique_participant_email_ci')
+        ]
 class ProjectParticipant(models.Model):
     project = models.ForeignKey('Project', on_delete=models.CASCADE, related_name='project_participants')
     participant = models.ForeignKey('Participant', on_delete=models.CASCADE, related_name='project_participants')

@@ -17,9 +17,11 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('participant_id', models.CharField(blank=True, max_length=10, null=True, unique=True)),
                 ('full_name', models.CharField(default='Unknown Participant', max_length=200)),
-                ('email', models.EmailField(default='unknown@example.com', max_length=254, unique=True)),
+                # email uniqueness enforced by model validation (case-insensitive); remove DB-level unique here
+                ('email', models.EmailField(default='unknown@example.com', max_length=254)),
                 ('affiliation', models.CharField(choices=[('CS', 'CS'), ('SE', 'SE'), ('Engineering', 'Engineering'), ('Other', 'Other')], default='Other', max_length=100)),
-                ('specialization', models.CharField(choices=[('Software', 'Software'), ('Hardware', 'Hardware'), ('Business', 'Business')], default='Software', max_length=100)),
+                # allow specialization to be blank/null; business rules enforce when cross_skill_trained=True
+                ('specialization', models.CharField(choices=[('Software', 'Software'), ('Hardware', 'Hardware'), ('Business', 'Business')], blank=True, null=True, max_length=100)),
                 ('cross_skill_trained', models.BooleanField(default=False)),
                 ('institution', models.CharField(choices=[('SCIT', 'SCIT'), ('CEDAT', 'CEDAT'), ('UniPod', 'UniPod'), ('UIRI', 'UIRI'), ('Lwera', 'Lwera')], default='SCIT', max_length=100)),
             ],
